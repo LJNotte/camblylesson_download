@@ -5,6 +5,7 @@
 | 工具 | 作用 | 形态 |
 |------|------|------|
 | **`cambly_export.py`** | 把 Cambly 网页版 past-lesson 导出为结构化 Markdown(元信息 + AI 反馈 + Transcript + Chat + Slides) | CLI 脚本 |
+| **`cambly_gui.py`** | `cambly_export.py` 的 GUI 外壳,粘贴 1-5 个 URL + 选下载路径,实时看日志 | 跨平台桌面窗口(pywebview) |
 | **`cambly-review` skill** | 对导出的 Markdown 做 5 维结构化 review(词汇 / 方法论 / 注意事项 / 纠错 / 句式),产出 `*-review.md` 配合 Obsidian 使用 | Mavis / Claude Code / Codex skill |
 
 **典型工作流**:
@@ -19,7 +20,8 @@ Cambly 网页 ──[cambly_export.py]──> 单节课 .md ──[cambly-review
 把 Cambly 网页版已结束课程(past-lesson)导出为结构化 Markdown,
 落到 `Tutor-Date-Duration` 自动命名的文件夹里。
 
-> **CLI-only 工具**,无 GUI,一次可传多个 URL 串行导出。
+> **CLI 工具 + 可选 GUI 外壳**(`cambly_gui.py`),一次可传多个 URL 串行导出。
+> 想要可视化界面就装 `pywebview` 跑 `cambly_gui.py`;只想要命令行也行,不影响。
 
 ## 1. 安装(一次性)
 
@@ -133,7 +135,91 @@ python3 cambly_export.py "<url>" --login --out ~/Documents/CamblyNotes
 
 ---
 
-# 二、`cambly-review` skill — 复习笔记生成器
+# 二、`cambly_gui.py` — GUI 外壳(可选)
+
+> 把 `cambly_export.py` 包了一层,可视化填 URL + 选下载路径 + 实时看日志。
+> **CLI 完全不受影响**,不装 `pywebview` 也能用 `cambly_export.py`。
+
+## 1. 安装 GUI 依赖(一次性)
+
+GUI 需要 `pywebview`,在已装好 `cambly_export.py` 依赖的基础上加一行:
+
+```bash
+pip install -r requirements.txt
+```
+
+依赖差异:
+- **macOS**:用系统 WKWebView,需要 `pyobjc`。**系统自带 Python 3.9 装不上**,
+  请用 [python.org Python 3.12+](https://www.python.org/downloads/macos/) 或 Homebrew Python。
+  这是 macOS 上所有原生 GUI 都绕不开的老问题(同 Tk)。
+- **Windows**:用 WebView2(Win10 1903+ / Win11 自带),`pywebview` 在 PyPI 有现成 wheel,
+  `pip install` 直接成功。
+- **Linux**:用 WebKit2GTK,需要系统包 `python3-gi gir1.2-webkit2-4.0` 等。
+
+> **不强求装 GUI**。你只是想可视化导出这一步,不需要 GUI 的话,继续用 CLI 即可。
+
+## 2. 启动
+
+```bash
+python3 cambly_gui.py
+```
+
+会弹出一个原生窗口:
+
+```
+┌────────────────────────────────────────┐
+│  Cambly 课程导出                        │
+├────────────────────────────────────────┤
+│  课程链接                                │
+│  1 [https://www.cambly.com/...past-...] │
+│  2 [(可选)]                              │
+│  3 [(可选)]                              │
+│  4 [(可选)]                              │
+│  5 [(可选)]                              │
+├────────────────────────────────────────┤
+│  下载路径                                │
+│  [/Users/.../Documents/CamblyNotes] [选择]│
+├────────────────────────────────────────┤
+│  [开始导出] [取消]  ☐ 首次登录模式       │
+│                            状态: 空闲    │
+├────────────────────────────────────────┤
+│  实时日志                                │
+│  ┌────────────────────────────────────┐ │
+│  │ 启动子进程(共 2 条)                  │ │
+│  │ 输出目录: /Users/.../CamblyNotes   │ │
+│  │ ---                                │ │
+│  │ [1/2] https://www.cambly.com/...   │ │
+│  │ → 外教: Dennis D, 日期: ...        │ │
+│  │ ✓ 已保存 → /Users/.../.../xxx.md  │ │
+│  │ ...                                │ │
+│  └────────────────────────────────────┘ │
+└────────────────────────────────────────┘
+```
+
+## 3. 操作流程
+
+1. 粘贴 1-5 个课程 URL(空槽自动忽略)
+2. 选个下载路径(默认 `~/Documents/CamblyNotes`,不存在会自动创建)
+3. 第一次用?勾上「首次登录模式」再点「开始导出」,会弹浏览器让你登一次
+4. 不勾登录模式时,直接复用 `~/.cambly_export/chrome-profile/` 里已有的 cookie
+5. 跑的时候状态徽章会从「空闲」→「运行中 (1/3)」→「完成 ✓」,日志区实时刷新
+6. 跑一半想停?点「取消」,子进程会被 `terminate`
+
+> 跟 CLI 完全等价:底层就是 `python3 cambly_export.py URL1 URL2 ... --out <路径>`。
+> 你也可以先在终端 `--login` 一次,再回 GUI 跑,cookie 是共享的。
+
+## 4. 实现要点
+
+- `pywebview` 起原生窗口(macOS WKWebView / Windows WebView2 / Linux WebKit2GTK)
+- 把 `cambly_export.py` 当子进程跑,`PYTHONUNBUFFERED=1` 保证日志实时流到 GUI
+- 5 个 URL 槽是固定 HTML 元素,空字符串被过滤,超过 5 个会自动截断并提示
+- 输出目录不存在会自动 `mkdir -p`,失败会立刻报错
+- 前端用暗色/亮色自适应(`prefers-color-scheme`),跟系统主题走
+- 状态徽章 4 种:idle / running(done/total) / done / error
+
+---
+
+# 三、`cambly-review` skill — 复习笔记生成器
 
 **前提**:你已经在用 [Mavis / Claude Code / Codex](https://github.com)
 或其他支持 skill 加载的 agent 客户端。
@@ -256,7 +342,7 @@ skill 跑完后:
 
 ---
 
-# 三、常见问题
+# 四、常见问题
 
 **Q: 跑出来 feedback 是空的,markdown 里提示「反馈面板还未生成完成」。**
 A: Cambly AI 反馈是异步生成的。脚本最多等 30s。再跑一次通常就有了。
@@ -290,14 +376,20 @@ skill 的"Agent 可读总结"里会标注"本节课偏自由聊天,词汇密度�
 
 ---
 
-# 四、已知限制
+# 五、已知限制
 
 ## `cambly_export.py`
-- **CLI-only**,无 GUI(个人偏好,见 agent memory)
 - **每条约 30-60s**,瓶颈是 Cambly AI 反馈异步生成(等 30s) + 页面渲染
 - **单浏览器实例**,串行跑多条
 - **依赖前端 DOM 结构**,Cambly 改版会失效
 - **transcript 合并粒度**:同 speaker 相邻片段合并,不识别"说话停顿"
+
+## `cambly_gui.py`
+- **macOS 上需要 Python 3.12+**(pyobjc 编译问题,跟 Tk 8.5 同一类坑)
+- **Windows 上需要 Win10 1903+ / Win11**(用系统 WebView2)
+- **Linux 需要系统包** `python3-gi gir1.2-webkit2-4.0` 等
+- **不是独立打包**:`pywebview` 走系统 WebView,不内置 Chromium,体量小
+- **底层仍是 CLI**:GUI 失败时直接退回去用 `cambly_export.py` 就行
 
 ## `cambly-review` skill
 - **依赖 LLM 质量**:本质是结构化 prompt,需要 gpt-4 / sonnet / 同级模型才能稳定产出 5 维
@@ -307,13 +399,15 @@ skill 的"Agent 可读总结"里会标注"本节课偏自由聊天,词汇密度�
 
 ---
 
-# 五、项目结构
+# 六、项目结构
 
 ```
 Cambly/
 ├── cambly_export.py     # CLI 工具 + 结构化提取 + markdown 渲染
-├── requirements.txt     # playwright
-└── README.md            # 本文件
+├── cambly_gui.py        # (可选) GUI 外壳,pywebview 单文件
+├── requirements.txt     # playwright + pywebview
+├── README.md            # 本文件
+└── .gitignore           # .worktrees/ __pycache__/ ...
 
 # 配合使用的 skill(分享出去时一起打包):
 cambly-review/

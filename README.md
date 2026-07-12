@@ -1,11 +1,25 @@
-# Cambly Lesson Exporter
+# Cambly 课程工作流
 
-把 Cambly 网页版已结束课程(past-lesson)导出为结构化 Markdown:
-**课程总结 + AI 反馈 + 语音转文字 + 课堂聊天 + 课件**,落到 `Tutor-Date-Duration` 自动命名的文件夹里。
+两件套,把 Cambly 课程从"网页里翻不到"变成"Obsidian 里可复习":
 
-> **CLI-only 工具**,无 GUI,一次可传多个 URL 串行导出。
+| 工具 | 作用 | 形态 |
+|------|------|------|
+| **`cambly_export.py`** | 把 Cambly 网页版 past-lesson 导出为结构化 Markdown(元信息 + AI 反馈 + Transcript + Chat + Slides) | CLI 脚本 |
+| **`cambly-review` skill** | 对导出的 Markdown 做 5 维结构化 review(词汇 / 方法论 / 注意事项 / 纠错 / 句式),产出 `*-review.md` 配合 Obsidian 使用 | Mavis / Claude Code / Codex skill |
+
+**典型工作流**:
+```
+Cambly 网页 ──[cambly_export.py]──> 单节课 .md ──[cambly-review]──> 复习笔记 .md
+```
 
 ---
+
+# 一、`cambly_export.py` — 导出工具
+
+把 Cambly 网页版已结束课程(past-lesson)导出为结构化 Markdown,
+落到 `Tutor-Date-Duration` 自动命名的文件夹里。
+
+> **CLI-only 工具**,无 GUI,一次可传多个 URL 串行导出。
 
 ## 1. 安装(一次性)
 
@@ -20,8 +34,6 @@ python3 -m playwright install chromium
 > 第一次跑 `--login` 时,工具会用 Playwright 自带的 Chromium 弹窗,
 > 不会动你日常 Chrome 的登录态。Cookie 缓存在 `~/.cambly_export/chrome-profile/`。
 
----
-
 ## 2. 第一次跑:登录 Cambly
 
 Cambly 整站都要登录,先手动登一次让 cookie 落盘:
@@ -33,8 +45,6 @@ python3 cambly_export.py "https://www.cambly.com/en/student/progress/past-lesson
 流程:弹 Chromium 窗口 → 手动登录 → 看到课程页 → 回终端按 Enter。
 
 之后所有导出都不用再登(cookie 失效时再跑一次 `--login`)。
-
----
 
 ## 3. 日常使用
 
@@ -82,8 +92,6 @@ python3 cambly_export.py \
 ============================================================
 ```
 
----
-
 ## 4. 全部参数
 
 | 参数 | 作用 |
@@ -101,8 +109,6 @@ python3 cambly_export.py "<url>" --debug-html ./debug.html --screenshots ./shots
 # 走完一次登录流程(用同一份 cookie)
 python3 cambly_export.py "<url>" --login --out ~/Documents/CamblyNotes
 ```
-
----
 
 ## 5. 输出结构
 
@@ -127,7 +133,130 @@ python3 cambly_export.py "<url>" --login --out ~/Documents/CamblyNotes
 
 ---
 
-## 6. 常见问题
+# 二、`cambly-review` skill — 复习笔记生成器
+
+**前提**:你已经在用 [Mavis / Claude Code / Codex](https://github.com)
+或其他支持 skill 加载的 agent 客户端。
+
+对 `cambly_export.py` 导出的单节课 Markdown 做 5 维结构化复习笔记,
+在同目录产出 `<原文件名>-review.md`,可直接放进 Obsidian vault 复习。
+
+## 1. 安装(分享给对方后)
+
+skill 文件夹结构:
+```
+cambly-review/
+└── SKILL.md
+```
+
+对方把整个 `cambly-review/` 放到自己客户端的 skill 目录即可,具体路径看客户端:
+- Mavis: `~/.mavis/skills/cambly-review/`
+- Claude Code: `~/.claude/skills/cambly-review/`
+- Codex / OpenCode: 各自的 `skills/` 目录
+
+> skill 本身**无外部依赖**,纯文本规则 + LLM 推理,不需要 pip install 任何东西。
+
+## 2. 触发方式
+
+在 agent 客户端对话里,用以下任一关键词触发:
+
+| 关键词 | 场景 |
+|--------|------|
+| `review`、`梳理`、`整理` | 给一节 / 一堆课做 review |
+| `/ob-secure + 课程分析` | 显式要求按 ob-secure 五规则产出 |
+| `cambly-review` | 直接念 skill 名 |
+| `把这堆课都过一遍` | 文件夹批量模式 |
+
+英文 trigger 同理:`review my Cambly lesson`、`review 整个文件夹`。
+
+## 3. 两种使用模式
+
+### 3.1 单文件模式
+
+直接给一节课的路径:
+
+```
+帮我 review 一下这节课
+/Users/llazuli/Documents/CamblyNotes/Dennis D-July 1st, 2026-60 minutes/Dennis D-July 1st, 2026-60 minutes.md
+```
+
+产出:`<同目录>/Dennis D-July 1st, 2026-60 minutes-review.md`,通常 250-450 行。
+
+### 3.2 文件夹增量模式(推荐)
+
+传一个**外层大文件夹**(里面是一堆 `<外教>-<日期>-<N> minutes/` 子文件夹,
+每节课一个):
+
+```
+把这堆课都过一遍
+/Users/llazuli/Documents/CamblyNotes/
+```
+
+skill 会:
+1. 扫一层子文件夹
+2. **跳过已经有 `*-review.md` 的子文件夹**(增量,不覆盖)
+3. 列出"已跳过 X / 待处理 Y"清单
+4. 1-2 节直接做;≥ 3 节先跟你确认一句
+5. 每节独立 review(不合并成一个文件),按时间倒序输出
+
+> 想重做某节课的 review?明确说"重做 / redo",skill 会覆盖并在 final reply 顶部红字提示。
+
+## 4. 产出格式(每节 review 的内部结构)
+
+每份 `<原文件名>-review.md` 严格按 ob-secure 五规则,10 个固定 section:
+
+1. **frontmatter** — `date / tutor / duration / date_of_lesson / topic` 5 个字段
+2. **目录** — Obsidian 锚点链接
+3. **概念总览** — 5 行表格,维度 ↔ 核心要点 ↔ 预期效果
+4. **一、重点词汇拓展** — 词 / 释义 / 词性 / 用法 / 例句;≥ 5 个词时额外加"同义辨析"
+5. **二、思维方法论** — 外教反复用的结构 / 模板 / 比喻 / 口诀
+6. **三、注意事项** — Callout `[!danger]` / `[!warning]` / `[!tip]`,外教说"don't..." 的雷区
+7. **四、表达不严谨之处** — 3 个子小节:Cambly AI 标注 / 外教当场纠正 / 自查发现(自查必列)
+8. **五、可复用句式 / 模板** — 完整句子,标"面试 / 日常 / 商务"用途
+9. **勘误与版本记录** — `~~删除线~~` 标记对原笔记的修正(正文不删任何内容)
+10. **Agent 可读总结** — SKILL / DOMAIN / TRIGGER_WHEN / STANCE + 优先级表 + 决策点 + 局限
+
+风格:中文为主(用户工作语言),英文例句和模板保留原文;每节至少 1 个 Callout;表格优于段落。
+
+## 5. 完整示例
+
+### 单节 review
+
+```
+Dennis D-July 1st, 2026-60 minutes/
+  ├── Dennis D-July 1st, 2026-60 minutes.md         (cambly_export.py 产物)
+  └── Dennis D-July 1st, 2026-60 minutes-review.md  (cambly-review 产物,新增)
+```
+
+### 批量 review(增量)
+
+```
+CamblyNotes/
+  ├── Schalk-June 5th, 2026-30 minutes/
+  │     ├── Schalk-June 5th, 2026-30 minutes.md
+  │     └── Schalk-June 5th, 2026-30 minutes-review.md       ← 已存在,跳过
+  ├── Schalk-June 26th, 2026-30 minutes/                     ← 待处理
+  ├── Dennis D-July 1st, 2026-60 minutes/                    ← 待处理
+  ├── Mia-June 18th, 2026-30 minutes/                        ← 待处理
+  └── Tom-July 3rd, 2026-45 minutes/                         ← 待处理
+```
+
+skill 跑完后:
+- 1 份已跳过(Schalk June 5th)
+- 4 份新增 review(各自独立)
+- final reply 顶部列出"已跳过 1 / 本次新增 4"
+
+## 6. skill 边界(什么时候不该用)
+
+- ❌ **通用 markdown 编辑 / 翻译 / 初学者词汇表** — 用通用 skill
+- ❌ **TOEFL / IELTS 标准化备考** — 用专门的备考 skill
+- ❌ **课堂外聊天记录** — 没结构化教学内容
+- ❌ **短对话** — 没结构化教学内容
+- ❌ **用户自写的中文笔记**(不是 cambly 导出格式) — skill 识别不到 Lesson ID 段,会拒绝
+
+---
+
+# 三、常见问题
 
 **Q: 跑出来 feedback 是空的,markdown 里提示「反馈面板还未生成完成」。**
 A: Cambly AI 反馈是异步生成的。脚本最多等 30s。再跑一次通常就有了。
@@ -138,6 +267,10 @@ A: cookie 过期了。重跑一次 `--login` 重新登录。
 **Q: transcript 数字跟我看到的不太一样。**
 A: 默认把 559 个 ASR 片段按「相邻同 speaker」合并到 ~540 个 turn。
 没做"按停顿重新对齐",那是另一个活儿,需要的话告诉我。
+
+**Q: cambly-review 跟 cambly_export.py 必须配对用吗?**
+A: 不必须。`cambly_export.py` 是导出,`cambly-review` 是复习笔记生成器。
+你完全可以只跑导出,或者手动写笔记后用 `cambly-review` 整理。
 
 **Q: 能不能并行跑(快一点)?**
 A: 现在是串行(一条完成再下一条),因为 Playwright 单浏览器实例 + cookie 共享。
@@ -151,23 +284,38 @@ A: 现在固定用 Playwright 自带的 Chromium(`python3 -m playwright install 
 A: 没有公开 API,全靠 Playwright 模拟浏览器 + DOM 解析。
 改版后用 `--debug-html` 和 `--screenshots` 把当前页面结构捞出来,再调 `cambly_export.py` 里的 `JS_FEEDBACK / JS_TRANSCRIPT / JS_CHAT / JS_SLIDES`。
 
+**Q: cambly-review 跑出来后,词汇/方法论太少,显得内容单薄。**
+A: 自由聊天课词汇密度本来就低(可能只有 1-2 个生词),不要硬凑。
+skill 的"Agent 可读总结"里会标注"本节课偏自由聊天,词汇密度低"。
+
 ---
 
-## 7. 已知限制
+# 四、已知限制
 
+## `cambly_export.py`
 - **CLI-only**,无 GUI(个人偏好,见 agent memory)
 - **每条约 30-60s**,瓶颈是 Cambly AI 反馈异步生成(等 30s) + 页面渲染
 - **单浏览器实例**,串行跑多条
 - **依赖前端 DOM 结构**,Cambly 改版会失效
 - **transcript 合并粒度**:同 speaker 相邻片段合并,不识别"说话停顿"
 
+## `cambly-review` skill
+- **依赖 LLM 质量**:本质是结构化 prompt,需要 gpt-4 / sonnet / 同级模型才能稳定产出 5 维
+- **ASR 转写误差**:Cambly 的 transcript 是 ASR 生成的,噪声大时需 skill 自行判断"推测"
+- **不覆盖已有 review**:增量模式下默认跳过,不会无声覆盖
+- **不是真人批改**:自查发现是 skill 根据 transcript 推理的,不能替代真人外教反馈
+
 ---
 
-## 8. 项目结构
+# 五、项目结构
 
 ```
 Cambly/
 ├── cambly_export.py     # CLI 工具 + 结构化提取 + markdown 渲染
 ├── requirements.txt     # playwright
 └── README.md            # 本文件
+
+# 配合使用的 skill(分享出去时一起打包):
+cambly-review/
+└── SKILL.md             # 5 维结构化 review skill
 ```

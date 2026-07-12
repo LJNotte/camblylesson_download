@@ -1,0 +1,606 @@
+# Cambly 课程导出
+
+- **Lesson ID**: `6a43e8da323f6f28ee64d728`
+- **课程 URL**: https://www.cambly.com/en/student/progress/past-lesson?lessonV2Id=6a43e8da323f6f28ee64d728&lang=en
+- **外教**: Dennis D
+- **日期**: July 1st, 2026
+- **时长**: 60 分钟
+- **扣课时**: 6/29-7/6
+- **表现指标**: Speaking 40% · WPM 105 · Unique words 496
+- **导出时间**: 2026-07-05 07:28:50
+
+---
+
+## 课程总结 · AI 反馈（From Cambly）
+
+### Other
+
+- **What you're doing well**: You effectively conveyed your experiences.
+- **Explanation**: Your ability to share detailed examples from your work history, such as your role in defect finding, showcases your practical knowledge and communication skills.
+
+### Grammar
+
+- **You said**: `No reasons`
+- **Suggestion**: `No reason.`
+- **Explanation**: The response should be singular to match the context.
+
+### Grammar
+
+- **You said**: `I have many experience about AI`
+- **Suggestion**: `I have a lot of experience with AI.`
+- **Explanation**: The word 'experience' should be uncountable in this context.
+
+---
+
+## 语音转文字（Transcript）
+
+共 559 个语音片段，合并为 **542** 个发言轮次。
+
+- **Leon**: Hi
+- **Dennis D**: Hello,
+- **Leon**: Yes,
+- **Dennis D**: hi, I am Dennis. Are you Leon?
+- **Leon**: I'm
+- **Dennis D**: Nice
+- **Leon**: Leon
+- **Dennis D**: nice to meet you Leon.
+- **Leon**: nice to meet you too
+- **Dennis D**: Thank you. Where in China do you live?
+- **Leon**: I live in Shanghai
+- **Dennis D**: Mm -hmm. And what do you do there? Do you have work or are you a student?
+- **Leon**: I've been working for more than three years
+- **Dennis D**: Okay, what kind of work do you do?
+- **Leon**: I'm a software testing engineer
+- **Dennis D**: Excellent. Okay, and After three years, do you still like your job?
+- **Leon**: Yeah, but I just lost my job and
+- **Dennis D**: Oh,
+- **Leon**: I'm looking
+- **Dennis D**: no
+- **Leon**: for
+- **Dennis D**: What happened did AI take your job?
+- **Leon**: No, but No reasons
+- **Dennis D**: No reason they didn't tell you a reason
+- **Leon**: Yeah
+- **Dennis D**: Wow, that sucks Okay How long ago did you? Lose your job
+- **Leon**: Just one month.
+- **Dennis D**: a
+- **Leon**: Yeah.
+- **Dennis D**: month ago.
+- **Leon**: Yeah.
+- **Dennis D**: I see have you been and you're looking for another job now
+- **Leon**: Yeah.
+- **Dennis D**: Okay Do you have a degree in software engineering or software development?
+- **Leon**: Yeah. I have a degree Computer science and technology.
+- **Dennis D**: I? See, okay. And are you looking to be? for another software Testing engineer job I
+- **Leon**: Yeah.
+- **Dennis D**: See, okay. Have you gotten any response from any companies that they Invited you to come for an interview
+- **Leon**: Yeah. Yes.
+- **Dennis D**: Excellent, okay. Have you gone on any interview yet?
+- **Leon**: Yes. I have got More than five about
+- **Dennis D**: Wow.
+- **Leon**: five.
+- **Dennis D**: Wow,
+- **Leon**: Yeah,
+- **Dennis D**: that's really good How when was the last interview that you went to?
+- **Leon**: it's about Four days ago.
+- **Dennis D**: Okay,
+- **Leon**: Yeah Yeah,
+- **Dennis D**: I See, okay And have you heard back from any of these companies since the interview did they ask you to come? For like a second interview
+- **Leon**: and My next interview will be in today or just 1 p .m Today because it is just past midnight now
+- **Dennis D**: Yes, I see. Okay
+- **Leon**: Yeah
+- **Dennis D**: Okay What kind of companies are these oh
+- **Leon**: it's called Eton a Electrical industry company in North America, yeah,
+- **Dennis D**: Really? I see. So is
+- **Leon**: yeah
+- **Dennis D**: this going to be a remote interview by zoom or something?
+- **Leon**: No, just face to face
+- **Dennis D**: Okay, so you have to go to an office building
+- **Leon**: Yeah
+- **Dennis D**: for this interview. Okay And will this interview be in English or Chinese?
+- **Leon**: Mmm, I think Probably half of them
+- **Dennis D**: I'd say half
+- **Leon**: Yeah,
+- **Dennis D**: of each half English half Chinese
+- **Leon**: yeah
+- **Dennis D**: Okay in your last job, did you have to read or speak English
+- **Leon**: No almost never used in my last
+- **Dennis D**: Wow,
+- **Leon**: job
+- **Dennis D**: okay Okay. So just one day they told you we're sorry Leon, but You're all done here. Yeah, you know, you no longer have a job that they just didn't tell you any reason
+- **Leon**: any reason my last job, right I Talked with my friends and it's probably about my KPI
+- **Dennis D**: Okay, yes key performance indicators, yeah
+- **Leon**: Yeah yes, and actually, I have a Cross team experience in Three three months ago and
+- **Dennis D**: Wow
+- **Leon**: So so some of my KPI or my Job goals
+- **Dennis D**: Mm
+- **Leon**: Can't
+- **Dennis D**: -hmm.
+- **Leon**: can't reach my team a team team workers or colleagues.
+- **Dennis D**: I
+- **Leon**: Yeah
+- **Dennis D**: see I see so it sounds like You were fired because of a misunderstanding or lack of information about your true KPI numbers
+- **Leon**: Mmm, actually, I think Yeah, or not. I
+- **Dennis D**: Okay.
+- **Leon**: Think probably because I worked for another team for
+- **Dennis D**: Ah
+- **Leon**: about two weeks, so so some of my results or my achievements can't reach my past team
+- **Dennis D**: I
+- **Leon**: and
+- **Dennis D**: see
+- **Leon**: and the boss only care about my whole Whole results
+- **Dennis D**: I
+- **Leon**: and
+- **Dennis D**: see
+- **Leon**: They just don't care I Helped to work for another team and I can't I can't I just can't Have so so many achievements there
+- **Dennis D**: Okay, it really doesn't matter at this point, right I mean It's what happened in the only important thing is how you move on from here
+- **Leon**: Yes
+- **Dennis D**: Yeah, okay in these five interviews that they that you've had since you lost your other job Did they ask you why? You quit your job or left your job
+- **Leon**: Sorry
+- **Dennis D**: In in the interviews you said you've had five interviews in like the last month when you go to these interviews Do they ask you? Why are you no longer working for? this company that Took away your job.
+- **Leon**: Sorry, it's about how will I answer the
+- **Dennis D**: That's
+- **Leon**: question
+- **Dennis D**: right.
+- **Leon**: means
+- **Dennis D**: That's right
+- **Leon**: an
+- **Dennis D**: in in the interview.
+- **Leon**: Yeah
+- **Dennis D**: Yes
+- **Leon**: Yeah Actually, I I am a little confused or not fine about my answers
+- **Dennis D**: Okay,
+- **Leon**: Because I will just say I was just I've never described myself by English, but in the
+- **Dennis D**: I
+- **Leon**: past
+- **Dennis D**: see
+- **Leon**: interviews,
+- **Dennis D**: I
+- **Leon**: I will say I just actually I I was just fired in last month But
+- **Dennis D**: see
+- **Leon**: it
+- **Dennis D**: I
+- **Leon**: it's
+- **Dennis D**: would not
+- **Leon**: a little
+- **Dennis D**: say that
+- **Leon**: Yeah,
+- **Dennis D**: I don't think you should say you were fired
+- **Leon**: yeah
+- **Dennis D**: Usually a person is fired because they did something wrong they Couldn't do the job or they couldn't get along with co -workers or they did something bad like stealing from the company I don't think you did any of those things, right?
+- **Leon**: Yeah
+- **Dennis D**: I Would I would tell them I was laid off
+- **Leon**: Late.
+- **Dennis D**: this means
+- **Leon**: Oh,
+- **Dennis D**: Right. This means that they just didn't have any more work for you
+- **Leon**: yeah late
+- **Dennis D**: Okay.
+- **Leon**: of
+- **Dennis D**: Yes Okay What is your current living situation do you live alone you live with family
+- **Leon**: I live alone. Yeah.
+- **Dennis D**: okay, and Do you have savings so that you can? You know pay the rent
+- **Leon**: Yeah
+- **Dennis D**: Pay for food and things. Okay good
+- **Leon**: Yes.
+- **Dennis D**: Okay Okay,
+- **Leon**: Oh Yeah
+- **Dennis D**: yes
+- **Leon**: Okay, okay, I just search for the late off and fire
+- **Dennis D**: Right.
+- **Leon**: Okay,
+- **Dennis D**: There's a big difference. You could be the greatest employee ever But if they don't have enough work for you, you could be laid off But if you're fired, it's usually because you did something bad. Oh
+- **Leon**: I
+- **Dennis D**: Don't
+- **Leon**: got it
+- **Dennis D**: say that you were fired say that you were laid off. They just didn't have any more work for me
+- **Leon**: yeah,
+- **Dennis D**: Did anyone else get laid off or anyone else lose their job? That
+- **Leon**: yeah
+- **Dennis D**: you know,
+- **Leon**: actually
+- **Dennis D**: oh, this is good This
+- **Leon**: Yeah,
+- **Dennis D**: you this this is actually good because it means they were not targeting you And
+- **Leon**: yeah
+- **Dennis D**: you can say I was not the only one that lay that was laid off other people lost their jobs, too
+- **Leon**: Yeah,
+- **Dennis D**: Okay,
+- **Leon**: actually many many people just leave
+- **Dennis D**: Wow
+- **Leon**: the company and
+- **Dennis D**: Wow,
+- **Leon**: There are so many people Sending flowers and taking pictures
+- **Dennis D**: really Wow
+- **Leon**: Yes,
+- **Dennis D**: Wow Okay What do you think we should do for our class today do you want to do mock Interview do you want to pretend? That you're doing a job interview in English
+- **Leon**: yeah,
+- **Dennis D**: Okay
+- **Leon**: that can't
+- **Dennis D**: Okay
+- **Leon**: be better
+- **Dennis D**: Yes. All right So I will ask you a very common opening question Tell me about yourself.
+- **Leon**: Okay I'm Leon I Have I'll be I have been a software testing engineer with three years of experience of Oh Sorry, I'm
+- **Dennis D**: It's okay.
+- **Leon**: Leon I'm Leon. I'm a software testing engineer with three years of experience of Sorry Logistics and e -commerce across border e -commerce and
+- **Dennis D**: Okay
+- **Leon**: I graduated from Harbin University of Science and Technology and I majored in computer science and technology and I also picked up a second degree on
+- **Dennis D**: in
+- **Leon**: Business management. Oh, yeah a second degree in Yeah
+- **Dennis D**: business management Do you have an MBA?
+- **Leon**: No, no,
+- **Dennis D**: Just a business manager a second bachelor's degree in business management or a double major I
+- **Leon**: yes double major,
+- **Dennis D**: see I would start with that I would start with the education and then go to your job the three years as software testing engineer and then explained At the end and I was laid off about a month ago along with a number of other employees This is all you need What they asked this question Tell me about yourself. They don't want all the details. They just want the overview of What have you done up to this point? They want to know your education and work experience. So then they can ask you more questions
+- **Leon**: okay,
+- **Dennis D**: okay, so We already talked about how to answer the question of why you left your previous job But here's a different kind of question about your previous job. Can you tell me what your Responsibilities were at your last job.
+- **Leon**: okay I worked for Pinduoduo in the past one and a half years and I was I focused on the Bailing settlement and About I focused on the settlement and Sorry, I'm just a little
+- **Dennis D**: It's okay. It's okay. Just relax. This is you know, this is just pretend and
+- **Leon**: Okay,
+- **Dennis D**: Even if this were a real interview you have to go into it thinking Not like my whole future depends on this interview No, even if you screw it up massively and they say get out. We never want to see you here No, that's not the end of the world there will be more interviews so
+- **Leon**: yes,
+- **Dennis D**: relax Okay.
+- **Leon**: okay I focused on the settlement department and then moved to the Warehousing and shipping part and In the past six months, there is no production defect
+- **Dennis D**: Wow.
+- **Leon**: Attributed to me. Yeah.
+- **Dennis D**: I See very good. Okay. That was a good answer Needs to be a little smoother, but that was a good answer not
+- **Leon**: Okay.
+- **Dennis D**: too long Okay
+- **Leon**: Yeah,
+- **Dennis D**: now the next question might be Tell me about a problem you encountered in your previous job and how you Overcame the problem.
+- **Leon**: okay In my last job there will be many Projects or demands that should be released Rapidly or Quickly yeah.
+- **Dennis D**: Okay, so I think maybe you mean there were many projects that had tight deadlines Like
+- **Leon**: Yeah,
+- **Dennis D**: it
+- **Leon**: right.
+- **Dennis D**: needs to be accomplished quickly
+- **Leon**: Yes,
+- **Dennis D**: Okay
+- **Leon**: I should It should be accomplished quickly, yeah, right,
+- **Dennis D**: Okay
+- **Leon**: okay And then I should push myself to do everything to Cut or Or save the time or save time, yeah and Want this kind of Projects Came to me. I will ask my PM to tell everything about the project and I try to push my Developer to Finish the work and tell me instantly and then I will try my best to Focus on that and try to finish it Actually In the past years, I think I have Did it very good actually and
+- **Dennis D**: okay, so
+- **Leon**: in many important projects and That was With that kind of deadline Actually, I have tried my best to finish them and in the past in the past one, I will say I just Actually Sorry, I just forgot how to describe this Properly
+- **Dennis D**: You always did your best to bring the project in Under deadline meaning you had it done before it was supposed to be done
+- **Leon**: Yes
+- **Dennis D**: Yes, that would be a good thing to say they love to hear that because deadlines are important
+- **Leon**: Yeah,
+- **Dennis D**: Okay
+- **Leon**: I
+- **Dennis D**: Okay
+- **Leon**: just try to say in the past project, I just almost Spent Say about one day to accomplish
+- **Dennis D**: Okay,
+- **Leon**: that. Yeah One day before the deadline
+- **Dennis D**: I
+- **Leon**: to
+- **Dennis D**: see
+- **Leon**: finish
+- **Dennis D**: oh
+- **Leon**: that. Yeah
+- **Dennis D**: Okay Your answer was good, but When they ask this question they want to hear about your skills as a problem solver So did you notice any kind of problem that you? acted on and it like saved your company money or It prevented something bad from happening Can you do you have any story like that about something that happened in your previous job,
+- **Leon**: Yeah, yeah,
+- **Dennis D**: okay.
+- **Leon**: I have Many stories,
+- **Dennis D**: Oh
+- **Leon**: but I
+- **Dennis D**: Good
+- **Leon**: don't
+- **Dennis D**: oh
+- **Leon**: I'm a little I'm still a little nervous
+- **Dennis D**: There's no reason to be nervous no
+- **Leon**: Okay
+- **Dennis D**: reason okay,
+- **Leon**: Yeah It's just two months ago, I just find I just find a very severe problem or defect In the downstream actually in the downstream team It's because when the When the providers actually when the providers ask us asked us to change our plan and The downstream didn't find out some some words or some important things has changed and In my project I just check all of them the upstream things and the downstream things and And I found out that there is One important thing that the downstream didn't figure. Oh, sorry and I just Figure it out and
+- **Dennis D**: okay.
+- **Leon**: I told the downstream Colleagues, yes,
+- **Dennis D**: Yes,
+- **Leon**: I just tell I just told all of them. Yeah, and they just change their plan and And Have some releases. Yeah have
+- **Dennis D**: okay
+- **Leon**: some change. Yeah.
+- **Dennis D**: Okay, this is a great story This is this shows them not only are you doing your own job? But you're watching out for your colleagues too and solving problems before they happen for them
+- **Leon**: Yeah
+- **Dennis D**: This was this is a good story, okay? Next question do you prefer working alone as part or as part of a team?
+- **Leon**: Actually, I think I will Do both of them well, I Think most of time you should work alone because something will will be Sent to you and you should finish them alone and then you should focus on them and You Can't avoid the time that you should you should work with other colleagues and in this time Actually, I think I can I can I can try my best to Sorry, let me leave me a minute
+- **Dennis D**: It's okay. Go ahead Tell them if they ask you this question Of course it's important to be a team player And I get along well with all of my colleagues and no matter what the project is But I am also able to work alone on my own with little or no supervision so whatever they have in mind for you either as a team member or just a Guy that they need to do something on their own you can do it
+- **Leon**: Yeah,
+- **Dennis D**: Okay,
+- **Leon**: thank you
+- **Dennis D**: okay,
+- **Leon**: I
+- **Dennis D**: no problem Okay next question Was there anything about your previous job that Was difficult for you to handle?
+- **Leon**: Will say when a project had so many up streams and down streams and you have so many people to To work together and
+- **Dennis D**: Yeah
+- **Leon**: yeah, and You should provide the Your part the information you worked for to everyone in the upstream or the downstream and in this case, you have to spend many time and your energy to work on that and
+- **Dennis D**: Okay
+- **Leon**: Yeah, and
+- **Dennis D**: Okay,
+- **Leon**: That's really normal in my past job. Yeah.
+- **Dennis D**: okay, if you have to say anything about your previous job Make sure you say I loved my job. I love the people I work with I got along well with everyone My managers were good to me even if they weren't Don't let them think that you are angry that you lost your job or that You lost your job because you you know there was anything wrong with you You
+- **Leon**: Yeah,
+- **Dennis D**: know so
+- **Leon**: I will
+- **Dennis D**: Show them that you are a strong enough man to pick yourself up and move on even though you were laid off From your previous job show that you don't hate them
+- **Leon**: Yeah, actually
+- **Dennis D**: Okay,
+- **Leon**: That's it because
+- **Dennis D**: okay
+- **Leon**: I really don't play them
+- **Dennis D**: Good good. Okay next question. Where do you see yourself in five years?
+- **Leon**: In the future, right?
+- **Dennis D**: Yes
+- **Leon**: It's it's about
+- **Dennis D**: Unless
+- **Leon**: my plan.
+- **Dennis D**: you have a time machine, can you go back? Can you go back five years?
+- **Leon**: Okay
+- **Dennis D**: I'm joking. No, I'm saying they're asking you. Where do you see yourself five years from now?
+- **Leon**: Actually, I'm a little confused about it it is it's about my plan in the future or
+- **Dennis D**: Yes, they're they're asking Looking ahead to five years from now in the year 2031 where will you be? What will you be doing?
+- **Leon**: Actually, I will say In the future, I think I will be a senior software testing engineer Yeah, I can I can and I will try my best to to do that to achieve that yeah, and In the meanwhile, I will try my best to know about know more about the Automation a Skill in my work in my work. Yeah and try to be Developer as well. Yeah.
+- **Dennis D**: Okay Okay, the reason they ask this question is not because they really care What you will be doing in five years because they don't know you the reason they ask this question is because if they are going to hire you and spend a lot of time money and effort and Bringing you on board and training you they don't want someone who's going to leave after a year or two or even five years So the way to answer this question is to say well Hopefully I see myself working here, but at a higher level than the job. I'm applying for This shows them both that if they hire you you will stay Which you don't have to if you get there and you find that place really sucks. You can leave Nothing you say in your job interview is going to force you to stay there, but it shows them that you're just looking for a place where you can stay and Use your talents to help their company advance so And if you say I see myself hopefully working here But at a higher level this shows you have confidence in your ability that you will be Promoted because you will do a good job
+- **Leon**: Yeah.
+- **Dennis D**: Okay
+- **Leon**: Okay.
+- **Dennis D**: When you go to a job interview you are acting as a salesperson You are trying to sell them a product and the product is you so
+- **Leon**: Yeah,
+- **Dennis D**: when we see Advertisements like on TV or online. They don't say oh, please buy our Product we really need the money They tell you how your life will be better if you buy the product so try to Show them in your answers That they will the company will be better off if they hire you instead of someone else Show that you are interested in the company not just the job You're high you're applying for
+- **Leon**: okay
+- **Dennis D**: Okay Next question. What is your greatest strength?
+- **Leon**: Actually, I will say I think I can see the details and sometimes I can figure figure out the Specific details that many people can't see.
+- **Dennis D**: Oh? Good,
+- **Leon**: Yeah.
+- **Dennis D**: okay, so you're very detail -oriented
+- **Leon**: Yes
+- **Dennis D**: Okay, very good This question though is almost always followed by what is your biggest weakness?
+- **Leon**: Yeah Actually, I think some of When the project there's too many up streams or down streams. I Will be a little too tired or Or Spend too too much time on it because I will try to know all about the the whole program so
+- **Dennis D**: I think
+- **Leon**: it it will took me a little more time to Keep up
+- **Dennis D**: okay
+- **Leon**: Yes,
+- **Dennis D**: to catch
+- **Leon**: yeah
+- **Dennis D**: up or To get started maybe Okay, this this is kind of a trick question again They want to see how you will handle a difficult question And this is a difficult question because they're basically asking you to say something bad about yourself and No one wants to do that especially when you're there trying to sell them a product
+- **Leon**: Yes,
+- **Dennis D**: So There are ways to answer this question without saying well a lot of people answer it by saying Oh, I'm so detail -oriented That I I can't let go of a project or when the projects over. I have a hard time letting go of it or so they say like I Work so hard that I find myself staying late at night making sure everything's just perfect or something like that It's kind of a bullshit answer for what is really a bullshit question
+- **Leon**: yeah
+- **Dennis D**: but Okay, but if you are honest Just a moment where is it there it is okay? Here in the chat box. I'm sending you a link for an article that is Tells you ten ways to answer this question about weakness Okay, we can either Read this together now, or you can take a look at it after the class if you wish The ways that they come up with for answering this question are really pretty clever because most of the time if you Use the Examples that they give you can make out this question into a strength not a weakness And
+- **Leon**: Okay
+- **Dennis D**: if you do have to say anything Negative about yourself if you have to say anything about a weakness be sure to say I'm aware of this problem, and I have been working to fix it Okay Okay Okay, you want to read this article for a while, or do you want to do some more interview questions go
+- **Leon**: Actually, I think Wait me a minute
+- **Dennis D**: ahead
+- **Leon**: Okay,
+- **Dennis D**: If you need a minute or two or three or four or five, it's okay if you want to take a little break, it's okay
+- **Leon**: yeah, I will try to give you another answer about it,
+- **Dennis D**: Okay, okay Let's look at this article together, okay,
+- **Leon**: yeah
+- **Dennis D**: just a moment
+- **Leon**: Grossman thought can help you stand up to interviews
+- **Dennis D**: Okay, so First group of Weaknesses is about self -management how you organize your work manage your time handle responsibilities, so struggle with Delegation this really is more for managers someone who's hiring to be a manager Some managers find it hard to give people jobs to do they want to do the whole job themselves and Of course no one can do the whole job all by themselves So if they ask you if a weakness is and and you say well sometimes I have a hard time Getting to trust others to do Jobs that I assigned them Again, have you had any management experience have you ever been in charge of a team of people?
+- **Leon**: No
+- **Dennis D**: No, it's okay. Let's just skip this one then Okay next Tendency to over commit if you were the kind of person where someone asks you for help you say yes Even if you're barely able to get your own work done This is a weakness it it means That you are too nice of a person to say no Sometimes and I'm this way if someone asks me for help. I'll do anything to help them but Sometimes you have to make sure that you have your own work done before you help someone else So this could be a weakness saying well in the past when people have come to me for help I've helped them and then I had to work even harder to get caught up on my own work something like that Okay,
+- **Leon**: Yeah,
+- **Dennis D**: we can read these examples if you want or
+- **Leon**: okay
+- **Dennis D**: Okay, so how about this one? Saying yes to every request can lead to burnout and a decline in work quality Burnout is when you just can't do your job anymore where you just exhausted have no more energy
+- **Leon**: Yeah
+- **Dennis D**: Okay, so please read the example response Very
+- **Leon**: Okay, my weakness has been a tendency to over commit Because I'm eager to can contribute. I found I was over Extended now I use a bureau project management tool to track all my deadlines Before taking on a new task. I consult this tool and my manager to realistically Realistically Assess my capacity this has Significantly improved my focus and the quality of my output
+- **Dennis D**: good reading. Very good. See how clever this is. They've turned a weakness into a strength they realize that they were Extending themselves too far. They're trying to do too much So they got this management tool and now it's improved their focus and the quality of their output so they're able to talk about how good their focus is and how much better their work quality is so This is a good and clever way to answer a question about weakness It turns it into a strength and an advantage Okay, here's the one I was talking about earlier Perfectionism. This is the one a lot of people say. Oh, I try so hard to do a perfect job that I staying late at night and You know just making sure everything is exactly right okay, so please read an intense focus
+- **Leon**: an intense focus on minute details Can sometimes impact efficiency and timelines I
+- **Dennis D**: Good very
+- **Leon**: Sometimes get caught up in the final details of a project. Well, I value quality Recognized it could slow me down to many of this I now set eternal milestones and guidelines for each project face This allows me to ensure quality without losing sight of the overall Picture and final deadline which has made me much more productive
+- **Dennis D**: good. Yes again. They've turned a weakness into this a strength they're now much more productive because they Recognized a problem and they worked to deal with the problem When reading this article though, it's important to not memorize these answers because they sound When you speak them they sound like you're reading a script like you're an actor reading their lines Be able to answer the question but Don't use their exact words Also, I think it's probably a good idea to find which one of these ten so -called weaknesses is True Meaning that it's something that you can relate to and then Be able to honestly tell them how you're working on fixing it Okay next
+- **Leon**: Yeah,
+- **Dennis D**: weaknesses about personal Communicate interpersonal and inner. I'm sorry. My weaknesses is sometimes I can't talk normally Public speaking anxiety This is a good one because almost everyone hates to speak in public in front of a large group of people Okay
+- **Leon**: yeah
+- **Dennis D**: Please read feeling nervous
+- **Leon**: Okay, the Feeling of feeling nervous about presenting to a group is very common. I Can feel nervous when presenting to very large and familiar of audiences To become more comfortable. I Volunteered to lead smaller team meetings and have joined Local Toastmasters draw a Toastmasters club this has greatly built my confidence and Improved my ability to communicate complex ideas clearly even in higher stakes meeting
+- **Dennis D**: Again, they have turned a weakness into a strength they're Talking about well, I used to be very nervous about speaking to an audience But now I've built up my confidence my ability to communicate complex ideas Clearly is much better So it turns the question back on the interviewer. They are expecting you to say something About yourself that is bad enough where they can say all we can't take this guy No, this turns it back on them and makes a weakness a strength I had a student who was also a business owner and he told me that He hired or he interviewed this guy and he asked him the question. What is your greatest weakness? And the guy said he answered honestly said well, I'm kind of lazy. I don't really like to work very hard Of course, he didn't get the job No one, you know, yes, it's good to be honest, but don't tell him that
+- **Leon**: No, nobody will will
+- **Dennis D**: No No,
+- **Leon**: want
+- **Dennis D**: oh
+- **Leon**: to hire them
+- **Dennis D**: right Okay This also is a good one. I can see myself in this. I don't like asking for help and less You know if I can do it myself, I don't want to bother anyone else So let's read about difficulty for asking for help.
+- **Leon**: Yeah, a strong independent streak can sometimes prevent you from seeking Assistance when it's needed streak, sorry
+- **Dennis D**: Oh Yes Independent streak in this case it it just means a part of you just there they're thinking of like markings on an animal like some animals have like a streak of color and You know, they might have black fur But then they have a streak of white somewhere or they might be, you know Like a cat will be mostly brown, but it has again a streak of orange or white Streak just means it's part of you.
+- **Leon**: Okay it's Some about character. Okay,
+- **Dennis D**: Yes
+- **Leon**: okay Because I'm highly independent I've historically found it difficult to ask for help I learned that this could sometimes lead to unnecessary roadblocks I've since I've since made a Conscious effort to be more Proactive if I'm stuck on something for more than 30 minutes and now reach out to a colleague This has not only sped up Sped up my workflow, but has also led to better collaborate collaborative collaborative solutions
+- **Dennis D**: Yes. Yes, your reading is very good Very good. Okay
+- **Leon**: Thank
+- **Dennis D**: Once
+- **Leon**: you
+- **Dennis D**: again, this person has turned a weakness into a strength So in the ones that we have read so far do any of these sound like you
+- **Leon**: Yeah, I think Probably the tendency to Overcommit I will say
+- **Dennis D**: Okay. Okay This is good. This shows that you're willing to help others, but
+- **Leon**: yeah.
+- **Dennis D**: that you have to set limits on yourself and you know this and
+- **Leon**: Yes
+- **Dennis D**: You know you you're not going to sacrifice your own work for to help someone else Okay,
+- **Leon**: Actually, I
+- **Dennis D**: yeah,
+- **Leon**: think I won't sacrifice my time but
+- **Dennis D**: okay
+- **Leon**: I think
+- **Dennis D**: good
+- **Leon**: most of the time other people will Ask you for help Actually, I will think we are a team and actually is my It's my job too.
+- **Dennis D**: excellent
+- **Leon**: So I will try
+- **Dennis D**: very
+- **Leon**: my best. I will try
+- **Dennis D**: good
+- **Leon**: my best to help them.
+- **Dennis D**: Okay,
+- **Leon**: Yeah,
+- **Dennis D**: okay, so let's put it this way if it during the job interview they ask you well How would you handle it if one of your co -workers asked you for help while you're trying to? Finish your own Part of the project. How would you deal with that?
+- **Leon**: I think if If I'm not in a hurry, I will try to explain it and try to show the solutions for them and if I'm really in a very very Important thing or I mean hurry, I will try to find another people to help them and
+- **Dennis D**: Okay Mm
+- **Leon**: Actually, there is another solution because you can write your experience down to some docs or some notes
+- **Dennis D**: -hmm
+- **Leon**: and you can just send them to The website the notes and they can follow the details and they can solve the problems themselves
+- **Dennis D**: Very good answer, but I I'd like to your answer the one before even more where you said I Feel like we're on a team and if they ask me for help, it's my job, too. I think that's a great answer So
+- **Leon**: Yeah
+- **Dennis D**: I would tell them that Okay Do you want to continue reading this or should we do a couple of more interview questions, whatever you want?
+- **Leon**: Mmm more questions. It's
+- **Dennis D**: Okay
+- **Leon**: fun.
+- **Dennis D**: More
+- **Leon**: I will
+- **Dennis D**: question more questions
+- **Leon**: Yeah
+- **Dennis D**: about weakness or more questions about just job interview
+- **Leon**: Just drop interview. I
+- **Dennis D**: Okay
+- **Leon**: will finish this article later. Yeah
+- **Dennis D**: Okay, okay just a Question that for me sounds kind of rude, but The people do ask it is why should we hire you
+- **Leon**: I think First of all, I will say I have enough experience to do this job and the second part I will say I love your company's culture and I really want to join join you to be part of part of your your team
+- **Dennis D**: very
+- **Leon**: and
+- **Dennis D**: good?
+- **Leon**: I really want to try my best to help to finish all of them And I will say Mmm, I'm really good at some defect finding and
+- **Dennis D**: Mm -hmm
+- **Leon**: I'm I'm good at using many different tools to solve some problems. I always do so
+- **Dennis D**: X
+- **Leon**: I Think you can You can't help me. Yes
+- **Dennis D**: You have to hire me Yeah, no, that was a great answer again. Yes It's also It's a chance for you to say good things about yourself like yes, I'm really good at finding defects and problems and things Yes, that's a good your answer was very good,
+- **Leon**: Thank you
+- **Dennis D**: let's see next Why do you want to work here? Actually, that's kind of that's kind of the same thing that you just answered how about this one What motivates you
+- **Leon**: Actually, I have to say The most important thing actually motivates me is money
+- **Dennis D**: Yes, exactly that's
+- **Leon**: Yeah
+- **Dennis D**: why we're all here right it's
+- **Leon**: Yeah,
+- **Dennis D**: Yeah It's honest, but don't be too honest like the guy who said I'm kind of lazy
+- **Leon**: yeah
+- **Dennis D**: Don't don't talk about money during the interview,
+- **Leon**: Yeah,
+- **Dennis D**: but just say I'm Motivated to do a good job at whatever I do. I really enjoy software engineering I really want to use my talents and skills and experience to help the right company Move even further ahead Okay Next question. Do you have any experience with AI?
+- **Leon**: I have many experience about
+- **Dennis D**: No, not many.
+- **Leon**: AI
+- **Dennis D**: I Have a lot of experience with AI Okay,
+- **Leon**: Okay
+- **Dennis D**: so tell them or tell me Examples of your experience with AI
+- **Leon**: Okay, I have a lot of experience in this AI Okay Actually, I have tried almost all the AI tools in the past half of a year because it has really The AI has a great development in the past year and I will use in the past job. I will use Gemini cloud and some AI in China just like DeepSeek and Kimi to help me to Sorry To Generate the Test cases and
+- **Dennis D**: Mm
+- **Leon**: test
+- **Dennis D**: -hmm
+- **Leon**: the test information or test data and Actually, it really Widened my horizon because AI actually is People who knows everything. That's it
+- **Dennis D**: Yeah
+- **Leon**: Yeah, and in the past months or In the past weeks, I've tried many I've tried many AI agents Just like cloud code and codex to generate many codes and It's really helpful for me to To finish some automation work. Yeah, that's
+- **Dennis D**: Very
+- **Leon**: it.
+- **Dennis D**: very good answer again It shows that they're not going to have to spend much time training you if your job involves AI You already know about AI good
+- **Leon**: Yeah
+- **Dennis D**: Okay.
+- **Leon**: Actually, I will say In
+- **Dennis D**: Yes
+- **Leon**: the past weeks the companies will always tell the question ask the
+- **Dennis D**: They
+- **Leon**: question
+- **Dennis D**: will they will ask you a question about AI good.
+- **Leon**: Yeah,
+- **Dennis D**: So
+- **Leon**: yeah,
+- **Dennis D**: you're ready for it. Just answer
+- **Leon**: yeah
+- **Dennis D**: it. Honestly, okay
+- **Leon**: And some of them just tell me I'm not good at it
+- **Dennis D**: They tell you you're not good at it. How do they
+- **Leon**: Yeah,
+- **Dennis D**: know?
+- **Leon**: yeah because they they ask so detail
+- **Dennis D**: Oh, I see.
+- **Leon**: Yeah,
+- **Dennis D**: Okay
+- **Leon**: they will say so many details about
+- **Dennis D**: Okay
+- **Leon**: just MCP or many things
+- **Dennis D**: Okay In your past interviews, are you generally? being Interviewed by like a Manager for the department where you will be working or are you being interviewed by HR? human resources I
+- **Leon**: Actually always in the past there will be HR interview in the last interview as I
+- **Dennis D**: See,
+- **Leon**: don't
+- **Dennis D**: right, right
+- **Leon**: But During this part this period
+- **Dennis D**: the
+- **Leon**: or
+- **Dennis D**: initial
+- **Leon**: in the past
+- **Dennis D**: interview.
+- **Leon**: weeks
+- **Dennis D**: Oh
+- **Leon**: Yeah Actually, I will say The They will have HR interview for the beginning in the beginning.
+- **Dennis D**: Okay,
+- **Leon**: Yeah So HR will always have a phone call to you to know your Many things. Yeah
+- **Dennis D**: okay. Okay. Here's a question that HR sometimes likes to ask Imagine that you notice one of your colleagues stealing something from the company What would you do? Would you talk to them and Try to get them to put the items back or would you report them to management?
+- **Leon**: Sorry, could you say
+- **Dennis D**: Okay
+- **Leon**: I
+- **Dennis D**: Imagine that you see one of your co -workers one of your colleagues Stealing something from the company taking something that does not belong to them Would you talk to them and tell them I saw what you did? put it back or Would you report? them to management
+- **Leon**: Think I will just Tell my colleague First I
+- **Dennis D**: Okay
+- **Leon**: will try to ask him to stop that because it's not good and Actually, you can't earn a lot and it's really harmful Yeah,
+- **Dennis D**: Yeah,
+- **Leon**: I will tell him or her Now and
+- **Dennis D**: I would yeah
+- **Leon**: Yeah,
+- **Dennis D**: go ahead
+- **Leon**: if they just don't care about it, I will try I will later try to ask Us ask my boss
+- **Dennis D**: mm
+- **Leon**: or some
+- **Dennis D**: -hmm
+- **Leon**: managers to
+- **Dennis D**: Yes
+- **Leon**: Fix it.
+- **Dennis D**: Okay,
+- **Leon**: Yeah.
+- **Dennis D**: it's again. It's a difficult question to answer because on the one hand you don't want to seem like you Can't handle the situation on your own. And on the other hand, you don't want to sound like you are Keeping secrets from the management
+- **Leon**: Yeah
+- **Dennis D**: If it were me, I would talk to the person and I would say look I saw what you did This isn't right you need to put it back and If they if they were like, oh, I'm so sorry You know, I I was just gonna borrow it or they had some other excuse that seemed logical Then maybe I would you know say okay. All right. We won't talk about it anymore But if I think that they might try to do it again Then I would go to the manager and say look I found this guy stealing and he put it back and he said he was sorry, but I Think you should keep an eye on him. I don't want him to know that I spoke to you and hopefully the management will be Professional enough to you know Keep it secret and and deal with it without involving you because you didn't do anything wrong
+- **Leon**: Yeah, I
+- **Dennis D**: Okay
+- **Leon**: got it
+- **Dennis D**: Okay Leanne we only have about a minute left. Do you have any questions for me before
+- **Leon**: Actually
+- **Dennis D**: we run?
+- **Leon**: No,
+- **Dennis D**: Okay,
+- **Leon**: no
+- **Dennis D**: I want to send you one more link
+- **Leon**: Thank you,
+- **Dennis D**: This is a list of Common interview questions and how to answer them not just about weaknesses, but just questions. No way Yep.
+- **Leon**: okay
+- **Dennis D**: Okay. Okay. Oh one other thing at the end of the interview if they ask you do you have any questions for me? Make sure you ask them a question. Don't say oh, no, I'm good Do some research on the company so that you can ask them an intelligent question And this will show again that you care more about the company than just the job It
+- **Leon**: Okay,
+- **Dennis D**: was really nice to meet you Leon good luck to you, I hope you have a great interview today
+- **Leon**: me too. Thank you.
+- **Dennis D**: You're
+- **Leon**: Thank you
+- **Dennis D**: welcome
+
+---
+
+## 课堂聊天（Chat）
+
+**Dennis D** 在课内聊天窗发出的内容：
+
+```
+
+laid off
+indeed.com/career-advice/interviewing/list-of-example-weaknesses-for-interviewing
+indeed.com/career-advice/interviewing/top-interview-questions-and-answers#:~:text=Highlighting strengths and weaknesses,You Interested in This Position?”
+
+```
+
+
+链接：
+
+- [indeed.com/career-advice/interviewing/list-of-example-weaknesses-for-interviewing](https://www.indeed.com/career-advice/interviewing/list-of-example-weaknesses-for-interviewing)
+- [indeed.com/career-advice/interviewing/top-interview-questions-and-answers#:~:text=Highlighting strengths and weaknesses,You Interested in This Position?”](https://www.indeed.com/career-advice/interviewing/top-interview-questions-and-answers#:~:text=Highlighting%20strengths%20and%20weaknesses,You%20Interested%20in%20This%20Position?%E2%80%9D)
+
+---
+
+## 课件（Slides）
+
+_（本节课未使用课件）_

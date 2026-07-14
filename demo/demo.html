@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cambly 课程导出 (Demo)</title>
+<style>
+  :root {
+    --bg: #f7f7f8;
+    --panel: #ffffff;
+    --border: #e3e3e8;
+    --text: #1f2328;
+    --text-dim: #6e7681;
+    --accent: #2e7d32;
+    --accent-hover: #1b5e20;
+    --danger: #c62828;
+    --warn: #b26a00;
+    --info: #1565c0;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Consolas, "PingFang SC", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; }
+  body { padding: 16px; max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 20px; margin: 0 0 4px; font-weight: 600; }
+  .sub { color: var(--text-dim); font-size: 12px; margin-bottom: 16px; }
+  .demo-banner { background: #fff3cd; color: #856404; padding: 6px 12px; border-radius: 6px; font-size: 12px; margin-bottom: 12px; text-align: center; }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+  .panel h2 { font-size: 12px; margin: 0 0 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+  .url-row { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
+  .url-row input { flex: 1; }
+  .url-row .label { font-size: 12px; color: var(--text-dim); width: 18px; text-align: right; flex-shrink: 0; }
+  input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  input[type="text"]:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); }
+  .dir-row { display: flex; gap: 6px; }
+  .dir-row input { flex: 1; }
+  button {
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--panel);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 13px;
+    font-family: var(--sans);
+    transition: background 0.1s;
+    white-space: nowrap;
+  }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.primary { background: var(--accent); color: white; border-color: var(--accent); font-weight: 600; }
+  button.danger { background: var(--danger); color: white; border-color: var(--danger); }
+  .actions { display: flex; gap: 10px; margin-top: 12px; align-items: center; flex-wrap: wrap; }
+  .status { font-size: 12px; color: var(--text-dim); margin-left: auto; display: flex; align-items: center; gap: 6px; }
+  .status .badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-weight: 500; }
+  .status .badge.idle    { background: var(--border); color: var(--text-dim); }
+  .status .badge.running { background: #fff3cd; color: #856404; }
+  .status .badge.done    { background: #d4edda; color: #155724; }
+  #log {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.55;
+    height: 320px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .log-line { display: block; }
+  .log-info { color: #9cdcfe; }
+  .log-out  { color: #d4d4d4; }
+  .log-warn { color: #dcdcaa; }
+  .log-err  { color: #f48771; }
+  .log-done { color: #b5cea8; font-weight: 600; }
+  .hint { color: var(--text-dim); font-size: 11px; margin-top: 4px; }
+  .checkbox { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-dim); }
+  .checkbox input { margin: 0; }
+</style>
+</head>
+<body>
+  <div class="demo-banner">⚠️ 这是 demo 演示,所有 URL / 路径 / 日志都是假的,实际跑用你自己的 lessonV2Id</div>
+  <h1>Cambly 课程导出</h1>
+  <div class="sub">粘贴最多 5 个课程 URL,选个输出目录,点开始。空槽会被忽略。</div>
+
+  <div class="panel">
+    <h2>课程链接</h2>
+    <div id="urls">
+      <div class="url-row"><span class="label">1</span><input type="text" data-idx="0" id="url0"></div>
+      <div class="url-row"><span class="label">2</span><input type="text" data-idx="1" id="url1"></div>
+      <div class="url-row"><span class="label">3</span><input type="text" data-idx="2" id="url2"></div>
+      <div class="url-row"><span class="label">4</span><input type="text" data-idx="3" id="url3"></div>
+      <div class="url-row"><span class="label">5</span><input type="text" data-idx="4" id="url4"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>下载路径(课程 md 落到这里)</h2>
+    <div class="dir-row">
+      <input type="text" id="outDir">
+      <button id="revealBtn" type="button">在文件中打开</button>
+    </div>
+    <div class="hint">不存在会自动创建。建议放在 iCloud / OneDrive 同步目录方便多端看。</div>
+  </div>
+
+  <div class="actions">
+    <button class="primary" id="startBtn" type="button">开始导出</button>
+    <button class="danger" id="cancelBtn" type="button" disabled>取消</button>
+    <label class="checkbox"><input type="checkbox" id="loginMode">首次登录模式(Playwright 弹浏览器手动登录)</label>
+    <span class="status"><span class="badge idle" id="statusBadge">空闲</span> <span id="elapsedInfo"></span></span>
+  </div>
+
+  <div class="panel" style="margin-top: 14px;">
+    <h2>实时日志</h2>
+    <div id="log"></div>
+  </div>
+
+<script>
+const DEMO_URLS = [
+  'https://www.cambly.com/en/student/progress/past-lesson?lessonV2Id=DEMO-A1B2C3D4&lang=zh_CN',
+  'https://www.cambly.com/en/student/progress/past-lesson?lessonV2Id=DEMO-E5F6G7H8&lang=zh_CN',
+  'https://www.cambly.com/en/student/progress/past-lesson?lessonV2Id=DEMO-I9J0K1L2&lang=zh_CN',
+];
+const DEMO_OUTDIR = '/Users/demo/Documents/CamblyNotes';
+const statusBadge = document.getElementById('statusBadge');
+const startBtn = document.getElementById('startBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const logEl = document.getElementById('log');
+const outDirInput = document.getElementById('outDir');
+const elapsedInfo = document.getElementById('elapsedInfo');
+
+function setStatus(kind, text) {
+  statusBadge.className = 'badge ' + kind;
+  statusBadge.textContent = text;
+}
+function appendLog(kind, msg) {
+  const line = document.createElement('span');
+  line.className = 'log-line log-' + kind;
+  line.textContent = msg;
+  logEl.appendChild(line);
+  logEl.appendChild(document.createTextNode('\n'));
+  logEl.scrollTop = logEl.scrollHeight;
+}
+function setElapsed(s) {
+  if (s == null) { elapsedInfo.textContent = ''; return; }
+  elapsedInfo.textContent = '(' + s.toFixed(1) + 's)';
+}
+
+function fakeType(input, text, charDelay = 30) {
+  return new Promise(resolve => {
+    let i = 0;
+    const t = setInterval(() => {
+      if (i >= text.length) { clearInterval(t); resolve(); return; }
+      input.value = text.slice(0, i + 1);
+      input.focus();
+      i++;
+    }, charDelay);
+  });
+}
+
+async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function runDemo() {
+  // 0. 初始化(空状态,日志区显示就绪)
+  outDirInput.value = '';
+  appendLog('info', 'Cambly GUI 就绪。');
+  appendLog('info', '提示:首次使用请先在终端跑一次 python3 cambly_export.py <url> --login');
+  await sleep(1500);
+
+  // 1. 自动填第一个 URL
+  const u0 = document.getElementById('url0');
+  u0.focus();
+  await fakeType(u0, DEMO_URLS[0], 25);
+  await sleep(400);
+
+  // 2. 填第二个
+  const u1 = document.getElementById('url1');
+  u1.focus();
+  await fakeType(u1, DEMO_URLS[1], 25);
+  await sleep(300);
+
+  // 3. 填第三个
+  const u2 = document.getElementById('url2');
+  u2.focus();
+  await fakeType(u2, DEMO_URLS[2], 25);
+  await sleep(800);
+
+  // 4. 填输出路径
+  outDirInput.focus();
+  await fakeType(outDirInput, DEMO_OUTDIR, 18);
+  await sleep(1000);
+
+  // 5. 点开始
+  startBtn.focus();
+  await sleep(400);
+  startBtn.click();
+  await sleep(200);
+
+  // 6. 状态转 running,显示 fake 日志
+  setStatus('running', '运行中 (1/3)');
+  setElapsed(0);
+  appendLog('info', '启动子进程(共 3 条)');
+  await sleep(150);
+  appendLog('info', '输出目录: ' + DEMO_OUTDIR);
+  await sleep(150);
+  appendLog('info', '---');
+  await sleep(300);
+
+  // lesson 1
+  appendLog('out', '');
+  appendLog('out', '============================================================');
+  appendLog('out', '[1/3] ' + DEMO_URLS[0]);
+  appendLog('out', '============================================================');
+  setStatus('running', '运行中 (1/3)');
+  for (const ln of [
+    '  → 打开 ' + DEMO_URLS[0],
+    '   正在浏览器中跑结构化提取...',
+    '   [scrape] feedback: ready=True, 4 categories',
+    '   [scrape] transcript: 423 fragments → 412 turns',
+    '   [scrape] chat: speaker=\'Sara\', links=0',
+    '   [scrape] slides: unavailable=False',
+  ]) {
+    appendLog('out', ln);
+    setElapsed((parseFloat(elapsedInfo.textContent.match(/[\d.]+/)?.[0] || 0) + 0.8));
+    await sleep(700);
+  }
+  appendLog('out', '   → 外教: Sara K, 日期: June 28th, 2026, 时长: 30 分钟');
+  appendLog('out', '   ✓ 已保存 → ' + DEMO_OUTDIR + '/Sara K-June 28th, 2026-30 minutes/Sara K-June 28th, 2026-30 minutes.md');
+  setElapsed(7.2);
+  await sleep(800);
+
+  // lesson 2
+  setStatus('running', '运行中 (2/3)');
+  appendLog('out', '');
+  appendLog('out', '============================================================');
+  appendLog('out', '[2/3] ' + DEMO_URLS[1]);
+  appendLog('out', '============================================================');
+  for (const ln of [
+    '  → 打开 ' + DEMO_URLS[1],
+    '   正在浏览器中跑结构化提取...',
+    '   [scrape] feedback: ready=True, 4 categories',
+    '   [scrape] transcript: 559 fragments → 542 turns',
+    '   [scrape] chat: speaker=\'Leon\', links=2',
+    '   [scrape] slides: unavailable=False',
+  ]) {
+    appendLog('out', ln);
+    setElapsed((parseFloat(elapsedInfo.textContent.match(/[\d.]+/)?.[0] || 0) + 0.6));
+    await sleep(600);
+  }
+  appendLog('out', '   → 外教: Dennis D, 日期: July 1st, 2026, 时长: 60 分钟');
+  appendLog('out', '   ✓ 已保存 → ' + DEMO_OUTDIR + '/Dennis D-July 1st, 2026-60 minutes/Dennis D-July 1st, 2026-60 minutes.md');
+  setElapsed(13.4);
+  await sleep(800);
+
+  // lesson 3
+  setStatus('running', '运行中 (3/3)');
+  appendLog('out', '');
+  appendLog('out', '============================================================');
+  appendLog('out', '[3/3] ' + DEMO_URLS[2]);
+  appendLog('out', '============================================================');
+  for (const ln of [
+    '  → 打开 ' + DEMO_URLS[2],
+    '   正在浏览器中跑结构化提取...',
+    '   [scrape] feedback: ready=True, 4 categories',
+    '   [scrape] transcript: 287 fragments → 281 turns',
+    '   [scrape] chat: speaker=\'Mia\', links=1',
+  ]) {
+    appendLog('out', ln);
+    setElapsed((parseFloat(elapsedInfo.textContent.match(/[\d.]+/)?.[0] || 0) + 0.5));
+    await sleep(500);
+  }
+  appendLog('out', '   → 外教: Mia R, 日期: July 3rd, 2026, 时长: 30 分钟');
+  appendLog('out', '   ✓ 已保存 → ' + DEMO_OUTDIR + '/Mia R-July 3rd, 2026-30 minutes/Mia R-July 3rd, 2026-30 minutes.md');
+  setElapsed(18.6);
+  await sleep(800);
+
+  // done
+  appendLog('out', '');
+  appendLog('out', '============================================================');
+  appendLog('done', '[done] 全部 3 条导出完成。输出目录: ' + DEMO_OUTDIR);
+  setStatus('done', '完成 ✓');
+  setElapsed(20.1);
+  await sleep(2500);
+}
+
+// 等 DOM 完全 ready 再启动
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => setTimeout(runDemo, 300));
+} else {
+  setTimeout(runDemo, 300);
+}
+</script>
+</body>
+</html>

@@ -13,6 +13,18 @@
 Cambly 网页 ──[cambly_export.py]──> 单节课 .md ──[cambly-review]──> 复习笔记 .md
 ```
 
+## 演示(30 秒看完整流程)
+
+[![](demo/demo_final_state.png)](demo/video/demo.mp4)
+
+[▶ 直接打开 mp4](demo/video/demo.mp4) · [静态预览](demo/demo_final_state.png) · [源文件 + 重录](demo/README.md)
+
+> ⚠️ 演示中的 URL 用 `DEMO-XXX`、路径用 `/Users/demo/...`,均为假数据,实际跑用你自己的 `lessonV2Id`。
+>
+> **GitHub 渲染说明**:如果上方是缩略图而不是视频播放器,说明 GitHub 没自动 embed(GitHub 对大 mp4 偶尔抽风),点缩略图或「直接打开 mp4」即可看。
+>
+> 想看嵌入式版本:复制 `https://raw.githubusercontent.com/LJNotte/camblylesson_download/main/demo/video/demo.mp4` 到第三方 markdown 渲染器(markdown 视频直接显示)。
+
 ---
 
 # 快速开始(30 秒跑通)

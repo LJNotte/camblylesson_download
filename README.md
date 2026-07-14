@@ -5,6 +5,7 @@
 | 工具 | 作用 | 形态 |
 |------|------|------|
 | **`cambly_export.py`** | 把 Cambly 网页版 past-lesson 导出为结构化 Markdown(元信息 + AI 反馈 + Transcript + Chat + Slides) | CLI 脚本 |
+| **`cambly_gui.py`** | `cambly_export.py` 的 GUI 外壳,粘贴 1-5 个 URL + 下载路径,实时看日志 | 浏览器标签页(stdlib http.server + 自动开浏览器) |
 | **`cambly-review` skill** | 对导出的 Markdown 做 5 维结构化 review(词汇 / 方法论 / 注意事项 / 纠错 / 句式),产出 `*-review.md` 配合 Obsidian 使用 | Mavis / Claude Code / Codex skill |
 
 **典型工作流**:
@@ -14,12 +15,35 @@ Cambly 网页 ──[cambly_export.py]──> 单节课 .md ──[cambly-review
 
 ---
 
+# 快速开始(30 秒跑通)
+
+```bash
+# 1. 装依赖
+cd /Users/llazuli/Documents/MiniMax/Cambly
+pip install -r requirements.txt
+python3 -m playwright install chromium
+
+# 2. 第一次登一次(弹浏览器手动登,cookie 落盘到 ~/.cambly_export/)
+python3 cambly_export.py "https://www.cambly.com/en/student/progress/past-lesson?lessonV2Id=任意一节&lang=zh_CN" --login
+
+# 3. 导出一节
+python3 cambly_export.py "https://www.cambly.com/.../?lessonV2Id=...&lang=zh_CN" --out ~/Documents/CamblyNotes
+
+# 4. (可选)用浏览器标签页 GUI 代替命令行
+python3 cambly_gui.py
+```
+
+> 跑通后:**详细 CLI 用法看 [第一节](#一cambly_exportpy--导出工具),GUI 用法看 [第二节](#二cambly_guipy--浏览器标签页-gui可选)。**
+
+---
+
 # 一、`cambly_export.py` — 导出工具
 
 把 Cambly 网页版已结束课程(past-lesson)导出为结构化 Markdown,
 落到 `Tutor-Date-Duration` 自动命名的文件夹里。
 
-> **CLI-only 工具**,无 GUI,一次可传多个 URL 串行导出。
+> **CLI 工具 + 可选浏览器标签页 GUI**(`cambly_gui.py`),一次可传多个 URL 串行导出。
+> 想要可视化界面就跑 `cambly_gui.py`(零额外依赖);只想要命令行也行,不影响。
 
 ## 1. 安装(一次性)
 
@@ -133,7 +157,229 @@ python3 cambly_export.py "<url>" --login --out ~/Documents/CamblyNotes
 
 ---
 
-# 二、`cambly-review` skill — 复习笔记生成器
+# 二、`cambly_gui.py` — 浏览器标签页 GUI(可选)
+
+> 把 `cambly_export.py` 包了一层,可视化填 URL + 选下载路径 + 实时看日志。
+> **零额外依赖** —— 不装 pywebview / PySide / Tk,直接用 Python stdlib `http.server` 起本地服务,
+> 自动用你电脑的默认浏览器打开。**CLI 完全不受影响**。
+
+## 0. GUI 跟 CLI 怎么选?
+
+| 场景 | 推荐 |
+|------|------|
+| 临时导 1-2 节,跟手动操作穿插 | **GUI**(可视化、能看进度、误操作容易停) |
+| 一口气导 5 节,跑完不看了 | CLI(写个 shell 循环后台跑) |
+| 写脚本/自动化 | CLI(`cambly_export.py` 适合 shell 串接) |
+| 给不熟 CLI 的朋友/家人用 | **GUI**(打开就能用) |
+| 远程 / SSH | CLI(GUI 需要本地浏览器) |
+
+底层完全等价 —— GUI 就是 `cambly_export.py` 的薄壳,导出文件格式、cookie、行为都一样。
+
+## 1. 启动 GUI
+
+```bash
+# 1. 装依赖(同 CLI,只要 playwright)
+cd /Users/llazuli/Documents/MiniMax/Cambly
+pip install -r requirements.txt
+python3 -m playwright install chromium
+
+# 2. 启 GUI
+python3 cambly_gui.py
+```
+
+终端会打印:
+```
+============================================================
+[cambly-gui] 本地服务已启动: http://127.0.0.1:53187/
+[cambly-gui] 1.5 秒后自动用默认浏览器打开...
+[cambly-gui] 如果没自动打开,请手动访问上面的 URL
+[cambly-gui] Ctrl+C 退出(同时会终止正在跑的导出子进程)
+============================================================
+```
+
+浏览器自动打开 → 看到表单 → 第一次用?继续看下面 **2. 第一次跑(登一次)**;已经登过?直接看 **3. 日常使用**。
+
+## 2. 第一次跑(登一次)
+
+Cambly 整站都要登录,第一次用 GUI 必须先让 cookie 落盘。
+
+**两条路径二选一:**
+
+**路径 A:在终端 `--login`(推荐,简单)**
+
+```bash
+python3 cambly_export.py "https://www.cambly.com/en/student/progress/past-lesson?lessonV2Id=任何一节&lang=zh_CN" --login
+```
+
+弹 Chromium → 手动登录 → 看到课程页 → 回终端按 Enter。cookie 落到 `~/.cambly_export/chrome-profile/`,以后所有调用都复用,GUI 不用再勾「登录模式」。
+
+**路径 B:在 GUI 里勾「登录模式」**
+
+GUI 里勾上「首次登录模式」→ 点「开始导出」→ Playwright 弹 Chromium 让你登 → 登完回终端按 Enter → 之后继续走导出流程。cookie 同样落盘。
+
+> 两条路径等价,选你觉得方便的。日常推荐 A,GUI 跑着跑着 cookie 失效了再用 B 重新登。
+
+## 3. 日常使用(已登过后)
+
+```
+┌────────────────────────────────────────┐
+│  Cambly 课程导出                        │
+├────────────────────────────────────────┤
+│  课程链接                                │
+│  1 [https://www.cambly.com/...past-...] │
+│  2 [(可选)]                              │
+│  3 [(可选)]                              │
+│  4 [(可选)]                              │
+│  5 [(可选)]                              │
+├────────────────────────────────────────┤
+│  下载路径(课程 md 落到这里)             │
+│  [/Users/.../Documents/CamblyNotes] [在文件中打开] │
+├────────────────────────────────────────┤
+│  [开始导出] [取消]  ☐ 首次登录模式       │
+│                  状态: 空闲              │
+├────────────────────────────────────────┤
+│  实时日志                                │
+│  ┌────────────────────────────────────┐ │
+│  │ ...                                │ │
+│  └────────────────────────────────────┘ │
+└────────────────────────────────────────┘
+```
+
+操作步骤:
+1. **填 URL**:从 Cambly past-lesson 页面复制 URL(包含 `lessonV2Id=...` 那段),粘到第 1 栏
+2. **多节课**:第 2-5 栏继续贴,空栏自动忽略;超过 5 节会被截断(批量大用 CLI)
+3. **下载路径**:默认 `~/Documents/CamblyNotes`,可改。建议放 iCloud / OneDrive 同步目录,多端能看
+4. **路径验证**:点「在文件中打开」会跳到 Finder/Explorer,确认路径对再开始
+5. **点「开始导出」**:状态从 `空闲` → `运行中 (1/3)`,日志区开始滚
+6. **跑完**:`完成 ✓`(绿色徽章),日志区显示「子进程退出 returncode=0」+ 每条课程的「✓ 已保存 → ...」
+
+## 4. 常见场景
+
+### 4.1 一次导 1 节
+
+```
+1: [https://www.cambly.com/.../past-lesson?lessonV2Id=ABC&lang=zh_CN]
+2-5: 留空
+```
+
+点「开始导出」,30-60 秒后看到 `完成 ✓`。
+
+### 4.2 一次导 3-5 节
+
+把 URL 一次贴满 5 栏,空栏自动跳过。状态会显示 `运行中 (1/3)` → `(2/3)` → `(3/3)`,每条结束后日志区出现 `✓ 已保存 → /.../外教-日期-时长/外教-日期-时长.md`。
+
+注意:串行跑,不是并行。总耗时 ≈ 30-60s × 条数(瓶颈是 Cambly AI 反馈异步生成)。
+
+### 4.3 用 Obsidian 同步目录当输出
+
+把下载路径改成 `~/Documents/ObsidianVault/CamblyNotes`,所有导出直接出现在 Obsidian vault 里。
+配合 `cambly-review` skill 还能自动产出 `*-review.md` 复习笔记。
+
+### 4.4 跑一半想停
+
+点「取消」→ 子进程被 `terminate` → 日志区显示 `[用户取消] 正在终止子进程...` → 状态回 `空闲`。
+部分导完的 .md 文件会留在输出目录(已经保存的不会回滚)。
+
+### 4.5 浏览器关了,服务还在?
+
+GUI 服务是 Python 进程,跟浏览器标签页解耦。关了浏览器 server 还活着,要回终端 `Ctrl+C` 关掉。
+要重新打开 GUI 标签页?再跑一次 `python3 cambly_gui.py`,或者手动访问终端打印过的 `http://127.0.0.1:PORT/`(注意:端口每次会变)。
+
+### 4.6 想后台跑,不看 GUI
+
+用 CLI 就行,GUI 设计上就是要人盯着:
+
+```bash
+nohup python3 cambly_export.py "URL1" "URL2" "URL3" --out ~/Documents/CamblyNotes > /tmp/cambly.log 2>&1 &
+tail -f /tmp/cambly.log
+```
+
+## 5. 界面怎么读
+
+### 5.1 状态徽章(右上角)
+
+| 状态 | 颜色 | 含义 |
+|------|------|------|
+| `空闲` | 灰 | 没任务 |
+| `运行中 (i/N)` | 黄 | 正在跑第 i/N 条 |
+| `完成 ✓` | 绿 | 全部成功,returncode=0 |
+| `失败 (code=N)` | 红 | returncode=N,看日志区找原因 |
+| `启动失败` | 红 | 子进程根本起不来,通常是命令写错或 Python 路径不对 |
+
+旁边会显示已用秒数,例如 `运行中 (2/3) (74.3s)`,方便估算剩余时间。
+
+### 5.2 日志区颜色
+
+| 颜色 | 含义 |
+|------|------|
+| 浅蓝 | info(GUI 自己打的提示) |
+| 白 | out(cambly_export.py 的正常输出) |
+| 黄 | warn(警告,比如「登录模式」提示) |
+| 红 | err(错误,看这一行就知道卡哪) |
+| 绿 | done(任务结束标记) |
+
+最常见的「卡住」识别法:看最后一行是什么颜色。**红色 = 错;黄色几分钟后不变 = 等异步;白色长时间没新行 = Playwright 死锁,关掉重来**。
+
+### 5.3 「在文件中打开」按钮
+
+只跳到目录,不会选中文件。Windows 上有「select file」的 explorer 用法,但跨平台一致性差,统一只 open 目录。
+
+## 6. 故障排查
+
+### 6.1 浏览器没自动开
+
+终端已经打印了 URL(例如 `http://127.0.0.1:53187/`),手动复制到浏览器地址栏即可。
+或者默认浏览器没设置:macOS `系统设置 → 桌面与程序坞 → 默认网页浏览器`;Windows `设置 → 应用 → 默认应用`。
+
+### 6.2 点「开始导出」提示「未登录(cookie 失效)」
+
+cookie 过期了,通常几个月到半年过期一次。重新跑 **2. 第一次跑** 的路径 A 或 B。
+
+### 6.3 「无法创建输出目录」
+
+输出路径无写权限,或者盘满了。换个本地路径试试,比如 `~/Documents/CamblyNotes`。
+
+### 6.4 状态一直「运行中」但日志不动
+
+Playwright 卡住了。点「取消」→ 等几秒 → 重新开始。如果反复卡,可能是:
+- Cambly 改版,DOM 抓不到(用 CLI 的 `--debug-html ./debug.html` 排查)
+- 网络问题(同 wifi / VPN 状态)
+- 系统资源吃紧(关掉其他大程序)
+
+### 6.5 端口被占用
+
+GUI 用 `port=0` 让 OS 分配空闲端口,理论不会冲突。如果真的冲突,重启 GUI 即可。
+
+### 6.6 关了 GUI 标签页但服务没关
+
+回到终端 `Ctrl+C`,server 关闭 + 正在跑的子进程被终止。
+
+## 7. 为什么是浏览器标签页,不是原生窗口?
+
+| 方案 | macOS 3.9.6 能跑? | 体验 | 备注 |
+|------|------|------|------|
+| **浏览器标签页** ✅(当前) | ✅ | 浏览器标签页 | 零依赖,跨平台一致 |
+| Tkinter | ⚠️ | 丑 + ttk 渲染 bug | 你之前踩过坑 |
+| pywebview | ❌ 装不上 | 原生窗口 | pyobjc 编译失败 |
+| PySide6 | ⚠️ wheel 不支持 3.9 | 原生窗口 | 要 3.10+ |
+
+**真要原生窗口**:先 `brew install python@3.12`(macOS)或 `pyenv install 3.12`,再考虑 pywebview / PySide6。
+当前方案是「**在 macOS 系统 Python 3.9.6 上**」唯一不折腾就能用的 GUI。
+
+## 8. 实现要点
+
+- `http.server.ThreadingHTTPServer` 起本地服务,port=0 让 OS 分配空闲端口
+- 前后端走 HTTP API:`/api/start_export` `/api/cancel_export` `/api/state` `/api/logs?since=` `/api/reveal`
+- 日志走 500ms 轮询,不用 SSE/WS —— 简单、跨浏览器一致、对这个场景延迟可接受
+- 「在文件中打开」按钮调 `open`(macOS)/ `explorer`(Win)/ `xdg-open`(Linux)
+- 子进程用 `PYTHONUNBUFFERED=1` + `bufsize=1` 实时流 stdout
+- 状态徽章 4 种:idle / running(done/total) / done / error + 已用秒数
+- 暗/亮色自适应(`prefers-color-scheme`),跟系统主题走
+- 退出走 `Ctrl+C` → `signal.SIGINT` → 优雅终止子进程
+
+---
+
+# 三、`cambly-review` skill — 复习笔记生成器
 
 **前提**:你已经在用 [Mavis / Claude Code / Codex](https://github.com)
 或其他支持 skill 加载的 agent 客户端。
@@ -256,7 +502,7 @@ skill 跑完后:
 
 ---
 
-# 三、常见问题
+# 四、常见问题
 
 **Q: 跑出来 feedback 是空的,markdown 里提示「反馈面板还未生成完成」。**
 A: Cambly AI 反馈是异步生成的。脚本最多等 30s。再跑一次通常就有了。
@@ -290,14 +536,20 @@ skill 的"Agent 可读总结"里会标注"本节课偏自由聊天,词汇密度�
 
 ---
 
-# 四、已知限制
+# 五、已知限制
 
 ## `cambly_export.py`
-- **CLI-only**,无 GUI(个人偏好,见 agent memory)
 - **每条约 30-60s**,瓶颈是 Cambly AI 反馈异步生成(等 30s) + 页面渲染
 - **单浏览器实例**,串行跑多条
 - **依赖前端 DOM 结构**,Cambly 改版会失效
 - **transcript 合并粒度**:同 speaker 相邻片段合并,不识别"说话停顿"
+
+## `cambly_gui.py`
+- **不是原生窗口**:走浏览器标签页,需要终端留一个 `python3 cambly_gui.py` 进程
+- **端口是临时的**:每次启动 `127.0.0.1` 随机空闲端口,关掉就没了
+- **同时只能跑一个**:`/api/start_export` 在已有任务时拒绝(避免多进程抢 cookie)
+- **没"原生文件夹选择"**:用文本输入 + 「在文件中打开」按钮(浏览器出于安全不暴露绝对路径)
+- **零依赖**:`stdlib http.server` + 浏览器,不增加任何 pip 包
 
 ## `cambly-review` skill
 - **依赖 LLM 质量**:本质是结构化 prompt,需要 gpt-4 / sonnet / 同级模型才能稳定产出 5 维
@@ -307,13 +559,15 @@ skill 的"Agent 可读总结"里会标注"本节课偏自由聊天,词汇密度�
 
 ---
 
-# 五、项目结构
+# 六、项目结构
 
 ```
 Cambly/
 ├── cambly_export.py     # CLI 工具 + 结构化提取 + markdown 渲染
-├── requirements.txt     # playwright
-└── README.md            # 本文件
+├── cambly_gui.py        # (可选) 浏览器标签页 GUI,stdlib http.server
+├── requirements.txt     # playwright(无 GUI 依赖)
+├── README.md            # 本文件
+└── .gitignore           # .worktrees/ __pycache__/ ...
 
 # 配合使用的 skill(分享出去时一起打包):
 cambly-review/

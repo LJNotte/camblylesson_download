@@ -35,14 +35,15 @@ cd /Users/llazuli/Documents/MiniMax/Cambly
 pip install -r requirements.txt
 python3 -m playwright install chromium
 
-# 2. 第一次登一次(弹浏览器手动登,cookie 落盘到 ~/.cambly_export/)
-python3 cambly_export.py "https://www.cambly.com/en/student/progress/past-lesson?lessonV2Id=任意一节&lang=zh_CN" --login
-
-# 3. 导出一节
-python3 cambly_export.py "https://www.cambly.com/.../?lessonV2Id=...&lang=zh_CN" --out ~/Documents/CamblyNotes
-
-# 4. (可选)用浏览器标签页 GUI 代替命令行
+# 2. 第一次登一次(GUI:点「登录/切换账号」;CLI:--login)
+#    GUI 推荐 ↓
 python3 cambly_gui.py
+#    打开浏览器 → 点「登录 / 切换账号」→ 在弹出的浏览器里手动登 → 点「关闭登录窗口」
+#    cookie 自动落盘到 ~/.cambly_export/chrome-profile/
+
+# 3. 导出一节(GUI 填 URL + 路径,或 CLI 传参)
+python3 cambly_export.py "https://www.cambly.com/.../?lessonV2Id=...&lang=zh_CN" --out ~/Documents/CamblyNotes
+# 或 GUI:启动后填表单 → 点「开始导出」
 ```
 
 > 跑通后:**详细 CLI 用法看 [第一节](#一cambly_exportpy--导出工具),GUI 用法看 [第二节](#二cambly_guipy--浏览器标签页-gui可选)。**
@@ -132,8 +133,9 @@ python3 cambly_export.py \
 
 | 参数 | 作用 |
 |------|------|
-| `urls` (位置参数,必填,可多个) | Cambly 课程 URL,空格分隔 |
-| `--login` | 弹浏览器手动登录(首次或 cookie 失效时) |
+| `urls` (位置参数,`--login-keep-open` 时不传,其它场景必填可多个) | Cambly 课程 URL,空格分隔 |
+| `--login` | 弹浏览器手动登录(首次或 cookie 失效时),登完按 Enter 自动继续导出 |
+| `--login-keep-open` | 弹一个**持久化登录窗口**(GUI 模式专用),cookie 改动实时落盘,SIGTERM 关闭。**不依赖 Enter,也不去 scrape 课程**。切账号反复登就反复用 |
 | `--out <dir>` | 输出目录(默认当前目录) |
 | `--debug-html <file>` | 把抓到的页面 HTML 落盘(只对第 1 个 URL 生效,排查用) |
 | `--screenshots <dir>` | 把每个 tab 截图落盘(同上,只对第 1 个 URL) |
@@ -223,13 +225,15 @@ Cambly 整站都要登录,第一次用 GUI 必须先让 cookie 落盘。
 python3 cambly_export.py "https://www.cambly.com/en/student/progress/past-lesson?lessonV2Id=任何一节&lang=zh_CN" --login
 ```
 
-弹 Chromium → 手动登录 → 看到课程页 → 回终端按 Enter。cookie 落到 `~/.cambly_export/chrome-profile/`,以后所有调用都复用,GUI 不用再勾「登录模式」。
+弹 Chromium → 手动登录 → 看到课程页 → 回终端按 Enter。cookie 落到 `~/.cambly_export/chrome-profile/`,以后所有调用都复用,GUI 不用再操作登录。
 
-**路径 B:在 GUI 里勾「登录模式」**
+**路径 B:在 GUI 里点「登录 / 切换账号」按钮(推荐用来切账号)**
 
-GUI 里勾上「首次登录模式」→ 点「开始导出」→ Playwright 弹 Chromium 让你登 → 登完回终端按 Enter → 之后继续走导出流程。cookie 同样落盘。
+GUI 顶部 → 点 `[登录 / 切换账号]` → Playwright 弹一个持久化浏览器停在 Cambly 首页 → 你在浏览器里**正常登录或切换账号**(反复登/退都行,cookie 实时落盘,不用 Enter)→ 回 GUI 点 `[关闭登录窗口]` 收尾。
 
-> 两条路径等价,选你觉得方便的。日常推荐 A,GUI 跑着跑着 cookie 失效了再用 B 重新登。
+> 路径 B 特别适合「**换号**」场景:不需要去终端,GUI 里点两下就完事;还能在登完之前一直反复切,不像 `--login` 必须 Enter 一次就定生死。
+> 
+> 两条路径等价,日常推荐 A(更轻),要切账号/反复登时用 B 更顺手。
 
 ## 3. 日常使用(已登过后)
 
@@ -247,7 +251,7 @@ GUI 里勾上「首次登录模式」→ 点「开始导出」→ Playwright 弹
 │  下载路径(课程 md 落到这里)             │
 │  [/Users/.../Documents/CamblyNotes] [在文件中打开] │
 ├────────────────────────────────────────┤
-│  [开始导出] [取消]  ☐ 首次登录模式       │
+│  [开始导出] [取消] [登录/切换账号] [关闭登录窗口]   │
 │                  状态: 空闲              │
 ├────────────────────────────────────────┤
 │  实时日志                                │
@@ -319,6 +323,19 @@ tail -f /tmp/cambly.log
 | `启动失败` | 红 | 子进程根本起不来,通常是命令写错或 Python 路径不对 |
 
 旁边会显示已用秒数,例如 `运行中 (2/3) (74.3s)`,方便估算剩余时间。
+
+最右边还有**登录窗口状态**:`登录窗口: 未开` / `登录窗口: 已打开 (PID 12345)`。已打开时:
+- 「开始导出」按钮自动 disable(避免 user_data_dir 冲突,Playwright 同一个目录不能开两个 context)
+- 「关闭登录窗口」按钮亮起,点一下 SIGTERM 子进程
+
+### 5.1.1 登录 / 切换账号按钮
+
+| 按钮 | 行为 |
+|------|------|
+| `[登录 / 切换账号]` | 弹一个持久化浏览器,停在 Cambly 首页 |
+| `[关闭登录窗口]` | 发 SIGTERM,关闭浏览器(cookie 已实时落盘) |
+
+适合:**首次登录、cookie 失效、要换号**这三种场景。比走 CLI `--login` 顺手——不用去终端按 Enter,GUI 里点两下完事。
 
 ### 5.2 日志区颜色
 
@@ -520,7 +537,9 @@ skill 跑完后:
 A: Cambly AI 反馈是异步生成的。脚本最多等 30s。再跑一次通常就有了。
 
 **Q: 提示「未登录(cookie 失效)」。**
-A: cookie 过期了。重跑一次 `--login` 重新登录。
+A: cookie 过期了。两种处理:
+- **GUI**:点 `[登录 / 切换账号]`,在弹出的浏览器里重新登,完事点 `[关闭登录窗口]`
+- **CLI**:`python3 cambly_export.py <url> --login`,弹浏览器,登完按 Enter
 
 **Q: transcript 数字跟我看到的不太一样。**
 A: 默认把 559 个 ASR 片段按「相邻同 speaker」合并到 ~540 个 turn。
@@ -560,6 +579,7 @@ skill 的"Agent 可读总结"里会标注"本节课偏自由聊天,词汇密度�
 - **不是原生窗口**:走浏览器标签页,需要终端留一个 `python3 cambly_gui.py` 进程
 - **端口是临时的**:每次启动 `127.0.0.1` 随机空闲端口,关掉就没了
 - **同时只能跑一个**:`/api/start_export` 在已有任务时拒绝(避免多进程抢 cookie)
+- **登录窗口开着时,导出按钮自动 disable**:Playwright 同一个 user_data_dir 不能并发,先关登录再导出
 - **没"原生文件夹选择"**:用文本输入 + 「在文件中打开」按钮(浏览器出于安全不暴露绝对路径)
 - **零依赖**:`stdlib http.server` + 浏览器,不增加任何 pip 包
 

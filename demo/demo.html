@@ -87,6 +87,8 @@
   .hint { color: var(--text-dim); font-size: 11px; margin-top: 4px; }
   .checkbox { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-dim); }
   .checkbox input { margin: 0; }
+  .login-status { font-size: 12px; }
+  .login-status.open { color: var(--accent); font-weight: 500; }
 </style>
 </head>
 <body>
@@ -117,8 +119,9 @@
   <div class="actions">
     <button class="primary" id="startBtn" type="button">开始导出</button>
     <button class="danger" id="cancelBtn" type="button" disabled>取消</button>
-    <label class="checkbox"><input type="checkbox" id="loginMode">首次登录模式(Playwright 弹浏览器手动登录)</label>
-    <span class="status"><span class="badge idle" id="statusBadge">空闲</span> <span id="elapsedInfo"></span></span>
+    <button id="loginOpenBtn" type="button" title="打开持久化登录窗口,登录/切换账号用">登录 / 切换账号</button>
+    <button id="loginCloseBtn" type="button" disabled title="关闭登录窗口">关闭登录窗口</button>
+    <span class="status"><span class="badge idle" id="statusBadge">空闲</span> <span id="elapsedInfo"></span> · <span id="loginStatus" class="login-status">登录窗口: 未开</span></span>
   </div>
 
   <div class="panel" style="margin-top: 14px;">
@@ -175,7 +178,7 @@ async function runDemo() {
   // 0. 初始化(空状态,日志区显示就绪)
   outDirInput.value = '';
   appendLog('info', 'Cambly GUI 就绪。');
-  appendLog('info', '提示:首次使用请先在终端跑一次 python3 cambly_export.py <url> --login');
+  appendLog('info', '提示:首次使用或要切换账号,点「登录 / 切换账号」按钮,在弹出的浏览器里登完再点「关闭登录窗口」');
   await sleep(1500);
 
   // 1. 自动填第一个 URL

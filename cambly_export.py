@@ -6,6 +6,7 @@ Usage:
     python3 cambly_export.py "<cambly-url>" --debug-html ./debug.html
     python3 cambly_export.py "<cambly-url>" --screenshots ./shots
     python3 cambly_export.py "<cambly-url>" --out /path/to/out
+    python3 cambly_export.py --login-keep-open                      # GUI 模式:打开持久化登录窗口
 
 Output:
     cambly_<lessonV2Id>.md  — fully structured markdown with metadata,
@@ -16,7 +17,9 @@ from __future__ import annotations
 
 import argparse
 import re
+import signal
 import sys
+import threading
 from datetime import datetime
 from pathlib import Path
 
@@ -569,6 +572,73 @@ def save_lesson(result: dict, output_dir: str | Path) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Login keep-open (GUI 模式专用)
+# ---------------------------------------------------------------------------
+
+
+def run_login_keep_open() -> int:
+    """弹一个持久化浏览器供登录/切换账号,等 SIGTERM 关闭。
+
+    跟 ``--login`` 区别:
+    - 不去 scrape 课程页
+    - 不要求按 Enter
+    - 窗口保持打开直到收到 SIGTERM(或 Ctrl+C)
+    - cookie 改动实时落盘(Playwright persistent context 自带行为)
+
+    给 ``cambly_gui.py`` 单独启动用,跟导出流程解耦。
+    """
+    PROFILE_DIR.mkdir(parents=True, exist_ok=True)
+
+    print("[info] 正在打开登录浏览器...")
+    print(f"[info] Cookie 目录: {PROFILE_DIR}")
+    print()
+
+    exit_event = threading.Event()
+
+    def _on_sigterm(signum: int, frame: object) -> None:  # noqa: ARG001
+        exit_event.set()
+
+    if sys.platform != "win32":
+        signal.signal(signal.SIGTERM, _on_sigterm)
+
+    with sync_playwright() as p:
+        context = p.chromium.launch_persistent_context(
+            user_data_dir=str(PROFILE_DIR),
+            headless=False,
+            viewport={"width": 1440, "height": 900},
+            locale="zh-CN",
+            args=["--disable-blink-features=AutomationControlled"],
+        )
+        page = context.new_page()
+        page.goto("https://www.cambly.com/", wait_until="domcontentloaded", timeout=60000)
+
+        print("[ok] 登录浏览器已打开,停在 Cambly 首页")
+        print("[ok] 你可以登录/切换账号;GUI 点「关闭登录窗口」会终止这里")
+        print("[ok] (cookie 改动会自动落盘,无需确认)")
+        print()
+
+        try:
+            if sys.platform == "win32":
+                # Windows:signal 不支持(实际可以但语义不一样),polling
+                while not exit_event.is_set():
+                    page.wait_for_timeout(500)
+            else:
+                # Unix:signal.pause 等 SIGTERM,逐个信号处理直到 flag 置位
+                while not exit_event.is_set():
+                    signal.pause()
+        except KeyboardInterrupt:
+            print("\n[info] Ctrl+C 收到,关闭浏览器...")
+
+        print("[info] 关闭浏览器...")
+        try:
+            context.close()
+        except Exception:  # noqa: BLE001
+            pass
+    print("[info] 登录浏览器已关闭")
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 
@@ -578,17 +648,23 @@ def main() -> int:
         description="Cambly 课程页导出为 markdown（结构化）。支持一次传多个 URL，串行跑。",
     )
     ap.add_argument(
-        "urls", nargs="+",
-        help="Cambly 课程 URL（可一次传多个，串行跑）",
+        "urls", nargs="*",
+        help="Cambly 课程 URL（可一次传多个，串行跑）。--login-keep-open 时不传。",
     )
     ap.add_argument("--login", action="store_true",
                     help="弹出浏览器让你手动登录一次（cookie 失效时也要重跑）")
+    ap.add_argument("--login-keep-open", action="store_true",
+                    help="GUI 模式专用:弹一个持久化浏览器供登录/切换账号,等 SIGTERM 关闭。")
     ap.add_argument("--out", default=".", help="md 输出目录（默认当前工作目录）")
     ap.add_argument("--debug-html", default=None,
                     help="把抓到的页面 HTML 落到该路径（仅对第一个 URL 生效）")
     ap.add_argument("--screenshots", default=None,
                     help="把每个 tab 截图落盘到该目录（仅对第一个 URL 生效）")
     args = ap.parse_args()
+
+    # GUI 模式:弹持久化登录窗口
+    if args.login_keep_open:
+        return run_login_keep_open()
 
     if not args.urls:
         ap.print_help()

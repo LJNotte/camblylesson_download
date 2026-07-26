@@ -61,7 +61,11 @@ def build_lesson_url(lesson_id: str, lang: str = "zh_CN") -> str:
 
 
 def open_lesson_page(playwright, lesson_id: str, *, headless: bool, debug_html: Path | None):
-    """Returns ``(context, page, is_logged_in)``."""
+    """Returns ``(context, page, is_logged_in)``.
+
+    出错约定(网络 / 超时 / 任何 page.goto 异常):
+        返回 ``(context, None, False)`` —— context 仍开着,caller 负责关。
+    """
     PROFILE_DIR.mkdir(parents=True, exist_ok=True)
     context = playwright.chromium.launch_persistent_context(
         user_data_dir=str(PROFILE_DIR),
@@ -73,7 +77,13 @@ def open_lesson_page(playwright, lesson_id: str, *, headless: bool, debug_html: 
     page = context.new_page()
     url = build_lesson_url(lesson_id)
     print(f"[info] 正在打开课程页: {url}")
-    page.goto(url, wait_until="domcontentloaded", timeout=60000)
+    try:
+        page.goto(url, wait_until="domcontentloaded", timeout=60000)
+    except Exception as e:  # noqa: BLE001
+        # 网络错误(ERR_CONNECTION_CLOSED / 限流 / DNS 失败 / timeout 等)
+        # 不让它把整批/整个进程干崩
+        print(f"[error] 打开课程页失败: {e}")
+        return context, None, False
 
     is_logged_in = False
     for _ in range(40):
@@ -526,14 +536,36 @@ def run_for_url(url: str, *, headless: bool = True, screenshots_dir=None,
         context, page, is_logged_in = open_lesson_page(
             p, lesson_id, headless=headless, debug_html=debug_html_path,
         )
-        if not is_logged_in:
-            context.close()
-            return {"ok": False, "error": "未登录（cookie 失效）", "url": url}
-
         try:
-            data = scrape_structured(page, screenshot_dir=shots_path)
+            if page is None:
+                # open_lesson_page 内部 page.goto 失败(网络 / 限流 / DNS / 超时)
+                return {
+                    "ok": False,
+                    "error": "打开课程页失败(网络/超时/限流等),查看上方日志",
+                    "url": url,
+                }
+            if not is_logged_in:
+                return {
+                    "ok": False,
+                    "error": "未登录(cookie 失效或 lesson 不存在)",
+                    "url": url,
+                }
+
+            try:
+                data = scrape_structured(page, screenshot_dir=shots_path)
+            except Exception as e:  # noqa: BLE001
+                # 某 tab 的 JS 报错 / DOM 变了 / 其它 scrape 期异常
+                # 不让一条带挂整批
+                return {
+                    "ok": False,
+                    "error": f"scrape 失败(可能 Cambly 改版了): {e}",
+                    "url": url,
+                }
         finally:
-            context.close()
+            try:
+                context.close()
+            except Exception:  # noqa: BLE001
+                pass
 
     return {
         "ok": True,

@@ -179,8 +179,8 @@ if (wk) md.week = wk[1] || wk[2];
 // AI 反馈正文:从 "From Cambly" / "来自 Cambly" 开始
 const fromIdx = body.search(/From Cambly|来自\s*Cambly/);
 const fbText = fromIdx >= 0 ? body.slice(fromIdx) : body;
-// 分类标题:英文 + 中文(2-6 个汉字)
-const catRegex = /(Other|Grammar|Vocabulary|Pronunciation|Fluency|Topic|Word Choice|Structure|Sentence Structure|语法|词汇|发音|流利度|话题|用词|句式|句子结构)(?=\s|$)/g;
+// 分类标题:英文 + 中文(2-6 个汉字)。用户确认的:词汇 语法 连贯性 其他
+const catRegex = /(Other|Grammar|Vocabulary|Pronunciation|Fluency|Coherence|Topic|Word Choice|Structure|Sentence Structure|语法|词汇|发音|流利度|连贯性|话题|用词|句式|句子结构|其他)(?=\s|$)/g;
 const catPositions = [];
 let m;
 while ((m = catRegex.exec(fbText)) !== null) {

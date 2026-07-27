@@ -148,33 +148,39 @@ JS_FEEDBACK = _JS_INNER + r"""
 const panel = panelContent();
 const body = txt(panel);
 const md = {};
-const dateMatch = body.match(/[A-Z][a-z]+ \d{1,2}(?:st|nd|rd|th)?,? \d{4}/);
+// 日期:英文 "July 1st, 2026" 或中文 "2026年7月26日"
+const dateMatch = body.match(/[A-Z][a-z]+ \d{1,2}(?:st|nd|rd|th)?,? \d{4}|(\d{4})年(\d{1,2})月(\d{1,2})日/);
 if (dateMatch) {
-    md.date = dateMatch[0];
-    // Strip out tab-strip noise (the panel often contains both mobile and
-    // desktop tab labels at the top before the actual content). Find the
-    // last "Firstname L." pattern in the prefix; otherwise use the prefix
-    // with tab tokens removed.
+    if (dateMatch[1]) {
+        // 中文日期:重新格式化为 2026-07-26 风格保留下来(模板里 fmt)
+        md.date = `${dateMatch[1]}-${String(dateMatch[2]).padStart(2,'0')}-${String(dateMatch[3]).padStart(2,'0')}`;
+    } else {
+        md.date = dateMatch[0];
+    }
+    // 老师名字:在日期前的最后一行有效文本
     const prefix = body.slice(0, dateMatch.index);
     const TAB_RE = /^(FEEDBACK|TRANSCRIPT|SLIDES|CHAT|反馈|语音转文字|教材课件|聊天|feedback|transcript|slides|chat)$/;
     const lines = prefix.split('\n').map(s => s.trim()).filter(l => l && !TAB_RE.test(l));
-    // Take the last 1–3 capitalized-word run before the date
     md.tutorName = lines.length ? lines[lines.length - 1] : '';
 }
-const sp = body.match(/Speaking percent\s*(\d+%)/);
-const wpm = body.match(/Words per minute\s*(\d+)/);
-const uniq = body.match(/Unique words\s*(\d+)/);
-const dur = body.match(/(\d+)\s*minutes/);
-md.speakingPercent = sp ? sp[1] : null;
-md.wordsPerMinute = wpm ? wpm[1] : null;
-md.uniqueWords = uniq ? uniq[1] : null;
-md.durationMinutes = dur ? dur[1] : null;
-const wk = body.match(/Deducted from the week of\s*([\d\/]+-[\d\/]+)/);
-if (wk) md.week = wk[1];
+// 表现指标:英文 + 中文 UI
+const sp   = body.match(/Speaking percent\s*(\d+%)|发言时长占比\s*(\d+%)/);
+const wpm  = body.match(/Words per minute\s*(\d+)|每分钟单词数\s*(\d+)/);
+const uniq = body.match(/Unique words\s*(\d+)|不重复词汇量\s*(\d+)/);
+// 时长:英文 "30 minutes" / 中文 "30分钟"
+const dur  = body.match(/(\d+)\s*minutes|(\d+)\s*分钟/);
+md.speakingPercent = sp   ? (sp[1] || sp[2]) : null;
+md.wordsPerMinute   = wpm  ? (wpm[1] || wpm[2]) : null;
+md.uniqueWords      = uniq ? (uniq[1] || uniq[2]) : null;
+md.durationMinutes  = dur  ? (dur[1] || dur[2]) : null;
+const wk = body.match(/Deducted from the week of\s*([\d\/]+-[\d\/]+)|从([\d\/]+-[\d\/]+)这周套餐课时中扣除/);
+if (wk) md.week = wk[1] || wk[2];
 
-const fromIdx = body.indexOf('From Cambly');
+// AI 反馈正文:从 "From Cambly" / "来自 Cambly" 开始
+const fromIdx = body.search(/From Cambly|来自\s*Cambly/);
 const fbText = fromIdx >= 0 ? body.slice(fromIdx) : body;
-const catRegex = /(Other|Grammar|Vocabulary|Pronunciation|Fluency|Topic|Word Choice|Structure|Sentence Structure)(?=\s|$)/g;
+// 分类标题:英文 + 中文(2-6 个汉字)
+const catRegex = /(Other|Grammar|Vocabulary|Pronunciation|Fluency|Topic|Word Choice|Structure|Sentence Structure|语法|词汇|发音|流利度|话题|用词|句式|句子结构)(?=\s|$)/g;
 const catPositions = [];
 let m;
 while ((m = catRegex.exec(fbText)) !== null) {
@@ -182,16 +188,30 @@ while ((m = catRegex.exec(fbText)) !== null) {
 }
 function parseItemBlock(block) {
     const item = {};
-    const lines = {
-        well:  /WHAT YOU(?:'|’)RE DOING WELL:\s*([\s\S]*?)(?=(EXPLANATION:|$))/.exec(block),
-        said:  /YOU SAID:\s*([\s\S]*?)(?=(SUGGESTION:|$))/.exec(block),
-        sug:   /SUGGESTION:\s*([\s\S]*?)(?=(EXPLANATION:|$))/.exec(block),
-        expl:  /EXPLANATION:\s*([\s\S]*?)(?=(This is unhelpful|$))/.exec(block),
+    // English UI labels
+    const enLines = {
+        well: /WHAT YOU(?:'|’)RE DOING WELL:\s*([\s\S]*?)(?=(EXPLANATION:|$))/.exec(block),
+        said: /YOU SAID:\s*([\s\S]*?)(?=(SUGGESTION:|$))/.exec(block),
+        sug:  /SUGGESTION:\s*([\s\S]*?)(?=(EXPLANATION:|$))/.exec(block),
+        expl: /EXPLANATION:\s*([\s\S]*?)(?=(This is unhelpful|$))/.exec(block),
     };
+    // Chinese UI labels(猜的,不对的话告诉我准确字符)
+    const zhLines = {
+        well: /您做得好的地方[::]\s*([\s\S]*?)(?=(知识点|$))/.exec(block),
+        said: /您说的是[::]\s*([\s\S]*?)(?=(建议|知识点|$))/.exec(block),
+        sug:  /建议[::]\s*([\s\S]*?)(?=(知识点|$))/.exec(block),
+        expl: /知识点[::]\s*([\s\S]*?)(?=$)/.exec(block),
+    };
+    const lines = enLines.well || enLines.said || enLines.sug || enLines.expl
+        ? enLines : zhLines;
     if (lines.well)  item.well        = lines.well[1].trim();
     if (lines.said)  item.youSaid     = lines.said[1].trim();
     if (lines.sug)   item.suggestion  = lines.sug[1].trim();
     if (lines.expl)  item.explanation = lines.expl[1].trim();
+    if (Object.keys(item).length === 0 && block.trim()) {
+        // 没匹配到结构化字段,直接当 raw 内容(中文模式常见)
+        item.raw = block.trim();
+    }
     return item;
 }
 const categories = [];
@@ -241,21 +261,31 @@ const panel = panelContent();
 const rawText = txt(panel);
 const TAB_NAMES = new Set(['Chat', '聊天', 'FEEDBACK', '反馈', 'TRANSCRIPT', '语音转文字', 'SLIDES', '教材课件', 'CHAT']);
 
-// Look for a line that is exactly "First Last" (capitalized, 2 words,
-// appears alone in the panel content). The chat panel renders the sender's
-// name on its own line before the first message. Use `*` on the second word
-// so single-letter initials (e.g. "Dennis D") match too.
+// Look for the sender name on its own line.
+// English: "Firstname L." / "Firstname Lastname"
+// Chinese: 单独的 "Thomas"(单字英文名) 或 "王老师" 之类
 let speaker = '';
+const CHAT_NOISE = new Set(['对话', '聊天', '课程', 'Lesson', 'From', 'Cambly', 'Help', 'Skip', 'Specific', 'Click', 'Go', 'Revisit', 'Deducted', 'Speaking', 'Words', 'Unique', '对话']);
 for (const line of rawText.split('\n')) {
     const t = line.trim();
-    const m = t.match(/^([A-Z][a-zA-Z]+)\s+([A-Z][a-zA-Z]*)$/);
-    if (!m) continue;
-    if (TAB_NAMES.has(m[1])) continue;
-    if (TAB_NAMES.has(m[2])) continue;
-    const joined = (m[1] + ' ' + m[2]).trim();
-    if (/^(Lesson|From|Cambly|Help|Skip|Specific|Click|Go|Revisit|Deducted|Speaking|Words|Unique)$/i.test(m[1])) continue;
-    speaker = joined;
-    break;
+    if (!t) continue;
+    // 英文 "Firstname L." / "Firstname Lastname"
+    let m = t.match(/^([A-Z][a-zA-Z]+)\s+([A-Z][a-zA-Z]*)$/);
+    if (m) {
+        if (TAB_NAMES.has(m[1]) || TAB_NAMES.has(m[2])) continue;
+        if (CHAT_NOISE.has(m[1])) continue;
+        speaker = (m[1] + ' ' + m[2]).trim();
+        break;
+    }
+    // 中文模式:单字英文名("Thomas")或 2-4 字中文名("王老师")
+    m = t.match(/^([A-Z][a-zA-Z]{1,15}|[\u4e00-\u9fff]{1,4})$/);
+    if (m) {
+        if (CHAT_NOISE.has(m[1])) continue;
+        // 排除 tab 名字的中文版
+        if (['反馈', '语音转文字', '教材课件', '聊天'].includes(m[1])) continue;
+        speaker = m[1];
+        break;
+    }
 }
 const links = Array.from(panel.querySelectorAll('a'))
     .filter(a => {
@@ -419,11 +449,11 @@ def render_markdown(lesson_id: str, data: dict) -> str:
         out.append(f"- **扣课时**: {md['week']}")
     stats_line = []
     if md.get("speakingPercent"):
-        stats_line.append(f"Speaking {md['speakingPercent']}")
+        stats_line.append(f"Speaking {md['speakingPercent']} / 发言时长占比 {md['speakingPercent']}")
     if md.get("wordsPerMinute"):
-        stats_line.append(f"WPM {md['wordsPerMinute']}")
+        stats_line.append(f"WPM {md['wordsPerMinute']} / 每分钟单词数 {md['wordsPerMinute']}")
     if md.get("uniqueWords"):
-        stats_line.append(f"Unique words {md['uniqueWords']}")
+        stats_line.append(f"Unique words {md['uniqueWords']} / 不重复词汇量 {md['uniqueWords']}")
     if stats_line:
         out.append(f"- **表现指标**: " + " · ".join(stats_line))
     out.append(f"- **导出时间**: {now}")
@@ -431,7 +461,7 @@ def render_markdown(lesson_id: str, data: dict) -> str:
 
     # ---- Feedback / AI summary ----
     fb = data.get("feedback", {}) or {}
-    out.append("## 课程总结 · AI 反馈（From Cambly）\n")
+    out.append("## 课程总结 · AI 反馈\n")
     if not fb.get("ready"):
         out.append("> ⚠️ 反馈面板在抓取时还未生成完成（Cambly AI 异步加载）。再跑一次可能就有了。\n")
     cats = fb.get("categories", []) or []
@@ -442,13 +472,17 @@ def render_markdown(lesson_id: str, data: dict) -> str:
             out.append(f"### {cat['category']}\n")
             for item in cat.get("items", []) or []:
                 if item.get("well"):
-                    out.append(f"- **What you're doing well**: {item['well']}")
+                    out.append(f"- **What you're doing well / 您做得好的地方**: {item['well']}")
                 if item.get("youSaid"):
-                    out.append(f"- **You said**: `{item['youSaid']}`")
+                    out.append(f"- **You said / 您说的是**: `{item['youSaid']}`")
                 if item.get("suggestion"):
-                    out.append(f"- **Suggestion**: `{item['suggestion']}`")
+                    out.append(f"- **Suggestion / 建议**: `{item['suggestion']}`")
                 if item.get("explanation"):
-                    out.append(f"- **Explanation**: {item['explanation']}")
+                    out.append(f"- **Explanation / 知识点**: {item['explanation']}")
+                if item.get("raw"):
+                    # 中文 UI 没匹配到结构化字段,直接把整段贴上
+                    out.append(item["raw"])
+                    out.append("")
             out.append("")
     out.append("---\n")
 
@@ -472,16 +506,21 @@ def render_markdown(lesson_id: str, data: dict) -> str:
     out.append("## 课堂聊天（Chat）\n")
     speaker = chat.get("speaker") or ""
     body = chat.get("text", "")
+    # 剥 tab 条残留(中英文)
     body = re.sub(r"FEEDBACK\s+TRANSCRIPT\s+SLIDES\s+CHAT\s*", "", body)
     body = re.sub(r"反馈\s+语音转文字\s+教材课件\s+聊天\s*", "", body)
+    # 剥 UI 提示文字(英文)
     body = re.sub(
-        r"^Chat\s+Go to specific parts of your lesson by clicking any message or emoji\.\s*",
-        "", body,
+        r"^Chat\s+Go to specific parts of your lesson by clicking any message or emoji\.\s*\n?",
+        "", body, flags=re.IGNORECASE | re.MULTILINE,
     )
+    # 剥 UI 提示文字(中文)
     body = re.sub(
-        r"^聊天\s+.*?(?:消息|表情).*",
-        "", body,
+        r"^对话\s*\n点击会话中的任意消息.*?\n",
+        "", body, flags=re.MULTILINE,
     )
+    # 剥第一行如果就是空 section title
+    body = re.sub(r"^(对话|聊天|Chat)\s*\n", "", body, flags=re.MULTILINE)
     # Drop the speaker name from the body if it appears first
     if speaker:
         body = re.sub(rf"^{re.escape(speaker)}\s*", "", body.strip(), count=1)

@@ -156,7 +156,7 @@ if (dateMatch) {
     // last "Firstname L." pattern in the prefix; otherwise use the prefix
     // with tab tokens removed.
     const prefix = body.slice(0, dateMatch.index);
-    const TAB_RE = /^(FEEDBACK|TRANSCRIPT|SLIDES|CHAT|feedback|transcript|slides|chat)$/;
+    const TAB_RE = /^(FEEDBACK|TRANSCRIPT|SLIDES|CHAT|反馈|语音转文字|教材课件|聊天|feedback|transcript|slides|chat)$/;
     const lines = prefix.split('\n').map(s => s.trim()).filter(l => l && !TAB_RE.test(l));
     // Take the last 1–3 capitalized-word run before the date
     md.tutorName = lines.length ? lines[lines.length - 1] : '';
@@ -204,7 +204,7 @@ for (let i = 0; i < catPositions.length; i++) {
         categories.push({ category: catPositions[i].name, items: [item] });
     }
 }
-({ ready: !body.includes('Getting your feedback ready'), metadata: md, categories });
+({ ready: !body.match(/Getting your feedback ready|正在.{0,4}反馈/i), metadata: md, categories });
 """
 
 JS_TRANSCRIPT = _JS_INNER + r"""
@@ -239,7 +239,7 @@ for (const t of turns) {
 JS_CHAT = _JS_INNER + r"""
 const panel = panelContent();
 const rawText = txt(panel);
-const TAB_NAMES = new Set(['Chat', 'FEEDBACK', 'TRANSCRIPT', 'SLIDES', 'CHAT']);
+const TAB_NAMES = new Set(['Chat', '聊天', 'FEEDBACK', '反馈', 'TRANSCRIPT', '语音转文字', 'SLIDES', '教材课件', 'CHAT']);
 
 // Look for a line that is exactly "First Last" (capitalized, 2 words,
 // appears alone in the panel content). The chat panel renders the sender's
@@ -270,24 +270,43 @@ const links = Array.from(panel.querySelectorAll('a'))
 
 JS_SLIDES = _JS_INNER + r"""
 const panel = panelContent();
-// strip out tab-strip noise from text
+// strip out tab-strip noise from text (English or Chinese)
 let t = txt(panel);
 t = t.replace(/FEEDBACK\s+TRANSCRIPT\s+SLIDES\s+CHAT\s*/g, '');
+t = t.replace(/反馈\s+语音转文字\s+教材课件\s+聊天\s*/g, '');
 t = t.replace(/^Slides\s+Revisit the slides from your lesson[^\n]*\n?/g, '');
-({ text: t.trim(), unavailable: /Unavailable/i.test(t) });
+t = t.replace(/^教材课件\s+回到课程的幻灯片.*\n?/g, '');
+({ text: t.trim(), unavailable: /Unavailable|不可用/i.test(t) });
 """
 
 
+# Cambly 在 locale=zh-CN 时返中文 UI,tab 名字完全不同。
+# 这里列的是「等价的同一 tab」,会按顺序逐个 try,直到点中。
+_TAB_NAME_ALIASES: dict[str, tuple[str, ...]] = {
+    "feedback":   ("反馈", "feedback", "Feedback", "FEEDBACK"),
+    "transcript": ("语音转文字", "transcript", "Transcript", "TRANSCRIPT"),
+    "chat":       ("聊天", "chat", "Chat", "CHAT"),
+    "slides":     ("教材课件", "slides", "Slides", "SLIDES"),
+}
+
+
 def _click_tab(page, name: str) -> None:
-    """Click all role=tab elements whose visible text equals `name`.
+    """Click the named tab (tries Chinese first if a mapping exists, else falls
+    back to the given English name verbatim).
 
     Cambly renders two parallel tab strips (mobile + desktop) so we click
-    every match. Bounded by timeout — if no tab is found we just log.
+    every match. Bounded by timeout — if no candidate matches we just log.
     """
-    try:
-        page.get_by_role("tab", name=name, exact=True).first.click(timeout=3000)
-    except Exception as e:
-        print(f"[warn] click tab {name!r} failed: {e}")
+    candidates = _TAB_NAME_ALIASES.get(name, (name,))
+    last_err: Exception | None = None
+    for candidate in candidates:
+        try:
+            page.get_by_role("tab", name=candidate, exact=True).first.click(timeout=2000)
+            return
+        except Exception as e:  # noqa: BLE001
+            last_err = e
+            continue
+    print(f"[warn] click tab {name!r} failed (tried {candidates}): {last_err}")
 
 
 def scrape_structured(page, *, screenshot_dir: Path | None = None) -> dict:
@@ -310,7 +329,7 @@ def scrape_structured(page, *, screenshot_dir: Path | None = None) -> dict:
     page.wait_for_timeout(1500)
     try:
         page.wait_for_function(
-            """() => !document.body.innerText.includes('Getting your feedback ready')""",
+            """() => !document.body.innerText.match(/Getting your feedback ready|正在.{0,4}反馈/i)""",
             timeout=30000,
         )
     except Exception:
@@ -324,7 +343,7 @@ def scrape_structured(page, *, screenshot_dir: Path | None = None) -> dict:
     _click_tab(page, "transcript")
     try:
         page.wait_for_function(
-            """() => document.body.innerText.includes('Skip to the most memorable')""",
+            """() => document.body.innerText.match(/Skip to the most memorable|跳.{0,2}到.{0,4}精彩|跳.{0,2}过/)""",
             timeout=10000,
         )
     except Exception:
@@ -337,7 +356,7 @@ def scrape_structured(page, *, screenshot_dir: Path | None = None) -> dict:
     _click_tab(page, "chat")
     try:
         page.wait_for_function(
-            """() => document.body.innerText.includes('specific parts of your lesson')""",
+            """() => document.body.innerText.match(/specific parts of your lesson|课程.{0,4}特定部分|点击任意消息/)""",
             timeout=10000,
         )
     except Exception:
@@ -350,7 +369,7 @@ def scrape_structured(page, *, screenshot_dir: Path | None = None) -> dict:
     _click_tab(page, "slides")
     try:
         page.wait_for_function(
-            """() => /Revisit the slides|Lesson Slide Preview Unavailable/.test(document.body.innerText)""",
+            """() => /Revisit the slides|Lesson Slide Preview Unavailable|回到课程的幻灯片|课件不可用/.test(document.body.innerText)""",
             timeout=10000,
         )
     except Exception:
@@ -454,8 +473,13 @@ def render_markdown(lesson_id: str, data: dict) -> str:
     speaker = chat.get("speaker") or ""
     body = chat.get("text", "")
     body = re.sub(r"FEEDBACK\s+TRANSCRIPT\s+SLIDES\s+CHAT\s*", "", body)
+    body = re.sub(r"反馈\s+语音转文字\s+教材课件\s+聊天\s*", "", body)
     body = re.sub(
         r"^Chat\s+Go to specific parts of your lesson by clicking any message or emoji\.\s*",
+        "", body,
+    )
+    body = re.sub(
+        r"^聊天\s+.*?(?:消息|表情).*",
         "", body,
     )
     # Drop the speaker name from the body if it appears first
@@ -483,8 +507,13 @@ def render_markdown(lesson_id: str, data: dict) -> str:
     out.append("## 课件（Slides）\n")
     sl_text = (slides.get("text") or "").strip()
     sl_text = re.sub(r"FEEDBACK\s+TRANSCRIPT\s+SLIDES\s+CHAT\s*", "", sl_text)
+    sl_text = re.sub(r"反馈\s+语音转文字\s+教材课件\s+聊天\s*", "", sl_text)
     sl_text = re.sub(
         r"^Slides\s+Revisit the slides from your lesson to strengthen your learning\.\s*",
+        "", sl_text,
+    )
+    sl_text = re.sub(
+        r"^教材课件\s+.*",
         "", sl_text,
     )
     if slides.get("unavailable") or "Unavailable" in sl_text:
